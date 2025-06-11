@@ -28,6 +28,8 @@ resource "github_repository" "repo" {
 }
 
 resource "github_actions_repository_access_level" "actions_access" {
+  count = var.repo_visibility == "private" ? 1 : 0
+
   access_level = var.actions_access_level
   repository   = github_repository.repo.name
 }
