@@ -79,6 +79,15 @@ resource "google_service_account_iam_binding" "workload_identity_binding" {
 # }
 
 
+resource "github_actions_variable" "gcp_folder_id" {
+  count = var.allow_tf_workspaces && var.create_gcp_folder ? 1 : 0
+
+  repository    = github_repository.repo.name
+  variable_name = "GCP_FOLDER_ID"
+  value         = module.gcp_folder[0].folder_id
+}
+
+
 resource "github_actions_variable" "gcp_service_account" {
   count = var.allow_tf_workspaces ? 1 : 0
 
