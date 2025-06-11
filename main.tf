@@ -27,7 +27,7 @@ resource "github_repository" "repo" {
 
 }
 
-resource "github_actions_repository_access_level" "test" {
+resource "github_actions_repository_access_level" "actions_access" {
   access_level = var.actions_access_level
   repository   = github_repository.repo.name
 }
