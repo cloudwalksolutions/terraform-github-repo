@@ -246,3 +246,10 @@ variable "wi_pool_id" {
 }
 
 
+variable "actions_access_level" {
+  description = "Access level for GitHub Actions in the repository. Options are 'none', 'user', 'organization', 'enterprise'. Default is 'none'."
+  type        = string
+  default     = "none"
+}
+
+
