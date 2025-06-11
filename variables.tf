@@ -211,6 +211,34 @@ variable "gcp_project_id" {
 }
 
 
+variable "gcp_parent_folder_id" {
+  description = "GCP parent folder ID"
+  type        = string
+  default     = ""
+}
+
+
+variable "create_gcp_folder" {
+  description = "Whether to create a GCP folder for the project"
+  type        = bool
+  default     = false
+}
+
+
+variable "gcp_folder_name" {
+  description = "GCP folder name to create. If not set, will use the name variable"
+  type        = string
+  default     = ""
+}
+
+
+variable "gcp_projects_to_create" {
+  description = "Map of GCP projects to create to list of APIs to enable"
+  type        = map(list(string))
+  default     = {}
+}
+
+
 variable "wi_pool_id" {
   description = "GCP workload identity pool ID"
   type        = string
