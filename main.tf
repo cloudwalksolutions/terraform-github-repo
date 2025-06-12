@@ -26,8 +26,8 @@ resource "github_repository" "repo" {
 
     content {
       source {
-        branch = each.key
-        path   = each.value
+        branch = template.key
+        path   = template.value
       }
     }
   }
