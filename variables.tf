@@ -253,3 +253,19 @@ variable "actions_access_level" {
 }
 
 
+variable "enable_github_pages" {
+  description = "Whether to enable GitHub Pages for the repository"
+  type        = bool
+  default     = false
+}
+
+
+variable "github_pages" {
+  description = "Map of GitHub Pages branches to their source directories"
+  type        = map(string)
+  default     = {
+    "gh-pages" = "docs"
+  }
+}
+
+
