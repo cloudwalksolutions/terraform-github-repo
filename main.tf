@@ -22,7 +22,7 @@ resource "github_repository" "repo" {
   }
 
   dynamic "pages" {
-    for_each = var.github_pages
+    for_each = var.enable_github_pages && var.repo_visibility == "public" ? var.github_pages : toset([])
 
     content {
       source {
