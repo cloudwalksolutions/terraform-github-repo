@@ -21,21 +21,13 @@ resource "github_repository" "repo" {
     }
   }
 
-  dynamic "template" {
-    for_each = local.template
-    content {
-      owner      = var.org_name
-      repository = template.value
-    }
-  }
-
   dynamic "pages" {
     for_each = var.github_pages
 
     content {
       source {
-        branch = template.key
-        path   = template.value
+        branch = each.key
+        path   = each.value
       }
     }
   }
