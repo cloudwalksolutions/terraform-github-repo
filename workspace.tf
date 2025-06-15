@@ -48,7 +48,7 @@ resource "google_service_account" "workspace_service_account" {
 resource "google_service_account_iam_binding" "workload_identity_binding" {
   count = var.allow_tf_workspaces ? 1 : 0
 
-  service_account_id = google_service_account.workspace_service_account[0].name
+  service_account_id = local.sa_email
   role               = "roles/iam.workloadIdentityUser"
 
   members = [
@@ -93,7 +93,7 @@ resource "github_actions_variable" "gcp_service_account" {
 
   repository    = github_repository.repo.name
   variable_name = "GCP_SERVICE_ACCOUNT"
-  value         = google_service_account.workspace_service_account[0].email
+  value         = local.sa_email
 }
 
 
