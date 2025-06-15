@@ -262,11 +262,17 @@ variable "enable_github_pages" {
 
 variable "github_pages" {
   description = "Map of GitHub Pages branches to their source directories"
-  type        = list(object({
+  type = list(object({
     branch = string
     path   = string
   }))
-  default     = []
+  default = []
 }
 
+
+variable "gcp_service_account_permissions" {
+  description = "List of GCP service account permissions to assign"
+  type        = list(string)
+  default     = []
+}
 

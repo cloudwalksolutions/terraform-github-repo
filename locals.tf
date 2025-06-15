@@ -1,6 +1,6 @@
 
 locals {
-  template     = var.template_repo != "" ? toset([var.template_repo]) : toset([])
+  template = var.template_repo != "" ? toset([var.template_repo]) : toset([])
 
   all_branches = concat(var.new_branches, [var.source_branch])
 
@@ -9,6 +9,12 @@ locals {
   gcp_workload_identity_provider      = "${local.gcp_workload_identity_prefix}/providers/github-provider"
 
   state_bucket_name = "${var.state_bucket_prefix}-${github_repository.repo.name}-tfstate"
+
+  gcp_service_account_permissions = var.gcp_service_account_permissions != "" ? var.gcp_service_account_permissions : [
+    "roles/resourcemanager.folderAdmin",
+    "roles/resourcemanager.projectIamAdmin",
+    "roles/iam.serviceAccountUser",
+  ]
 }
 
 
