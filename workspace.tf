@@ -48,7 +48,7 @@ resource "google_service_account" "workspace_service_account" {
 resource "google_service_account_iam_binding" "workload_identity_binding" {
   count = var.allow_tf_workspaces ? 1 : 0
 
-  service_account_id = "serviceAccount:${local.sa_email}"
+  service_account_id = "projects/${var.gcp_project_id}/serviceAccounts/${local.sa_email}"
   role               = "roles/iam.workloadIdentityUser"
 
   members = [
