@@ -9,12 +9,6 @@ locals {
   gcp_workload_identity_provider      = "${local.gcp_workload_identity_prefix}/providers/github-provider"
 
   state_bucket_name = "${var.state_bucket_prefix}-${github_repository.repo.name}-tfstate"
-
-  gcp_service_account_permissions = length(var.gcp_service_account_permissions) > 0 ? var.gcp_service_account_permissions : [
-    "roles/resourcemanager.folderAdmin",
-    "roles/resourcemanager.projectIamAdmin",
-    "roles/iam.serviceAccountUser",
-  ]
 }
 
 
