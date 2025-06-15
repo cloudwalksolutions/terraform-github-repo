@@ -13,7 +13,7 @@ locals {
   sa_name      = "${var.name}-ws"
   full_sa_name = var.gcp_sa_prefix != "" ? "${var.gcp_sa_prefix}-${local.sa_name}" : local.sa_name
 
-  sa_email = var.create_gcp_folder ? "${local.full_sa_name}@${var.gcp_project_id}.iam.gserviceaccount.com" : google_service_account.workspace_service_account[0].email
+  sa_email = "${local.full_sa_name}@${var.gcp_project_id}.iam.gserviceaccount.com"
 }
 
 
