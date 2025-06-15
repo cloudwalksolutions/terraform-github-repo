@@ -269,6 +269,12 @@ variable "github_pages" {
   default = []
 }
 
+variable "gcp_org_id" {
+  description = "GCP organization ID"
+  type        = string
+  default     = ""
+}
+
 
 variable "gcp_service_account_permissions" {
   description = "List of GCP service account permissions to assign"

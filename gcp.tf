@@ -8,6 +8,8 @@ module "gcp_folder" {
   folder_name      = var.gcp_folder_name != "" ? var.gcp_folder_name : var.name
   projects_dict    = var.gcp_projects_to_create
 
+  org_id = var.gcp_org_id
+
   create_service_account = true
   sa_is_security_admin   = true
   sa_prefix              = var.gcp_sa_prefix != "" ? var.gcp_sa_prefix : var.name
