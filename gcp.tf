@@ -14,6 +14,6 @@ module "gcp_folder" {
   sa_is_security_admin   = true
   sa_prefix              = var.gcp_sa_prefix != "" ? var.gcp_sa_prefix : var.name
   sa_project             = var.gcp_project_id
-  folder_permissions     = var.gcp_service_account_permissions
+  folder_permissions     = [for perm in var.gcp_service_account_permissions : "roles/${perm}"]
 }
 
