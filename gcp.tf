@@ -10,10 +10,10 @@ module "gcp_folder" {
 
   org_id = var.gcp_org_id
 
-  create_service_account = true
-  sa_is_security_admin   = true
-  sa_prefix              = var.gcp_sa_prefix != "" ? var.gcp_sa_prefix : var.name
-  sa_project             = var.gcp_project_id
-  extra_folder_permissions     = [for perm in var.gcp_service_account_permissions : "roles/${perm}"]
+  create_service_account   = true
+  sa_is_security_admin     = true
+  sa_prefix                = var.gcp_sa_prefix != "" ? var.gcp_sa_prefix : var.name
+  sa_project               = var.gcp_project_id
+  extra_folder_permissions = [for perm in var.gcp_service_account_permissions : "roles/${perm}"]
 }
 
