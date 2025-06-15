@@ -197,8 +197,8 @@ variable "state_bucket_prefix" {
   default     = "cw"
 }
 
-variable "gcp_service_account" {
-  description = "GCP service account"
+variable "gcp_sa_prefix" {
+  description = "GCP service account prefix"
   type        = string
   default     = ""
 }

@@ -10,7 +10,7 @@ module "gcp_folder" {
 
   create_service_account = true
   sa_is_security_admin   = true
-  sa_prefix              = var.gcp_service_account != "" ? var.gcp_service_account : var.name
+  sa_prefix              = var.gcp_sa_prefix != "" ? var.gcp_sa_prefix : var.name
   sa_project             = var.gcp_project_id
   folder_permissions     = local.gcp_service_account_permissions
 }
