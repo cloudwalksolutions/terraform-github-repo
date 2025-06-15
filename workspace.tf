@@ -22,6 +22,11 @@ module "state_bucket" {
   admins = [
     "serviceAccount:${local.sa_email}",
   ]
+
+  depends_on = [
+    google_service_account.workspace_service_account,
+    module.gcp_folder,
+  ]
 }
 
 
@@ -53,6 +58,11 @@ resource "google_service_account_iam_binding" "workload_identity_binding" {
 
   members = [
     "principalSet://iam.googleapis.com/${local.gcp_workload_identity_iam_principal}",
+  ]
+
+  depends_on = [
+    google_service_account.workspace_service_account,
+    module.gcp_folder,
   ]
 }
 
