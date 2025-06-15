@@ -277,7 +277,7 @@ variable "gcp_org_id" {
 
 
 variable "gcp_service_account_permissions" {
-  description = "List of GCP service account permissions to assign"
+  description = "List of GCP service account permissions to assign to the folder admin"
   type        = list(string)
   default     = []
 }
