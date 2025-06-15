@@ -20,7 +20,7 @@ module "state_bucket" {
     first = true
   }
   admins = [
-    "serviceAccount:${google_service_account.workspace_service_account[0].email}",
+    "serviceAccount:${local.sa_email}",
   ]
 }
 
