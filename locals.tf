@@ -9,6 +9,9 @@ locals {
   gcp_workload_identity_provider      = "${local.gcp_workload_identity_prefix}/providers/github-provider"
 
   state_bucket_name = "${var.state_bucket_prefix}-${github_repository.repo.name}-tfstate"
+
+  sa_name      = "${var.name}-ws"
+  full_sa_name = var.gcp_sa_prefix != "" ? "${var.gcp_sa_prefix}-${local.sa_name}" : local.sa_name
 }
 
 
