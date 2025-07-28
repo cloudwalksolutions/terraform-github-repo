@@ -22,7 +22,7 @@ module "gcp_folder" {
 resource "google_project_iam_member" "admin_project_storage_admin" {
   count = var.allow_tf_workspaces && var.create_gcp_folder ? 1 : 0
 
-  project = local.admin_project_name
+  project = local.admin_project_id
   role    = "roles/storage.admin"
   member  = "serviceAccount:${local.sa_email}"
 
@@ -32,7 +32,7 @@ resource "google_project_iam_member" "admin_project_storage_admin" {
 resource "google_project_iam_member" "admin_project_iam_admin" {
   count = var.allow_tf_workspaces && var.create_gcp_folder ? 1 : 0
 
-  project = local.admin_project_name
+  project = local.admin_project_id
   role    = "roles/iam.serviceAccountAdmin"
   member  = "serviceAccount:${local.sa_email}"
 
@@ -42,7 +42,7 @@ resource "google_project_iam_member" "admin_project_iam_admin" {
 resource "google_project_iam_member" "admin_project_project_iam_admin" {
   count = var.allow_tf_workspaces && var.create_gcp_folder ? 1 : 0
 
-  project = local.admin_project_name
+  project = local.admin_project_id
   role    = "roles/resourcemanager.projectIamAdmin"
   member  = "serviceAccount:${local.sa_email}"
 

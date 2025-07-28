@@ -4,13 +4,19 @@ locals {
 
   all_branches = concat(var.new_branches, [var.source_branch])
 
-  admin_project_name = "${var.state_bucket_prefix}-admin"
-  admin_project_apis = ["storage.googleapis.com", "iam.googleapis.com", "cloudresourcemanager.googleapis.com"]
+  admin_project_label = "${var.state_bucket_prefix}-admin"
+  admin_project_id    = "${var.name}-${local.admin_project_label}-project"
+
+  admin_project_apis = [
+    "storage.googleapis.com",
+    "iam.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+  ]
 
   projects_to_create = var.allow_tf_workspaces ? merge(
     var.gcp_projects_to_create,
     {
-      (local.admin_project_name) = local.admin_project_apis
+      (local.admin_project_label) = local.admin_project_apis
     }
   ) : var.gcp_projects_to_create
 
