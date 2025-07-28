@@ -4,11 +4,9 @@ locals {
 
   all_branches = concat(var.new_branches, [var.source_branch])
 
-  # Admin project configuration - creates a dedicated project for this repo when allow_tf_workspaces is true
-  admin_project_name = "${var.state_bucket_prefix}-${var.name}"
+  admin_project_name = "${var.state_bucket_prefix}-admin"
   admin_project_apis = ["storage.googleapis.com", "iam.googleapis.com", "cloudresourcemanager.googleapis.com"]
-  
-  # Combine user projects with admin project when allow_tf_workspaces is true
+
   projects_to_create = var.allow_tf_workspaces ? merge(
     var.gcp_projects_to_create,
     {
