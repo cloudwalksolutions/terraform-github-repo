@@ -4,7 +4,8 @@ locals {
 
   all_branches = concat(var.new_branches, [var.source_branch])
 
-  name_prefix = length(split(" ", var.name)) > 0 ? split(" ", var.name)[0] : var.name
+  name_items = split("-", var.name)
+  name_prefix = length(local.name_items) > 0 ? name_items[0] : var.name
 
   admin_project_label = "${var.state_bucket_prefix}-admin"
   admin_project_id    = "${local.name_prefix}-${local.admin_project_label}-project"
