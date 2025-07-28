@@ -4,8 +4,8 @@ locals {
 
   all_branches = concat(var.new_branches, [var.source_branch])
 
-  admin_project_label = "${var.state_bucket_prefix}-admin"
-  admin_project_id    = "${var.name}-${local.admin_project_label}-project"
+  admin_project_label = "${var.state_bucket_prefix}-${var.name}"
+  admin_project_id    = "${local.admin_project_label}-project"
 
   admin_project_apis = [
     "storage.googleapis.com",
