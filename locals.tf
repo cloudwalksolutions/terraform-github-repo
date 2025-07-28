@@ -4,6 +4,18 @@ locals {
 
   all_branches = concat(var.new_branches, [var.source_branch])
 
+  # Admin project configuration - creates a dedicated project for this repo when allow_tf_workspaces is true
+  admin_project_name = "${var.state_bucket_prefix}-${var.name}"
+  admin_project_apis = ["storage.googleapis.com", "iam.googleapis.com", "cloudresourcemanager.googleapis.com"]
+  
+  # Combine user projects with admin project when allow_tf_workspaces is true
+  projects_to_create = var.allow_tf_workspaces ? merge(
+    var.gcp_projects_to_create,
+    {
+      (local.admin_project_name) = local.admin_project_apis
+    }
+  ) : var.gcp_projects_to_create
+
   gcp_workload_identity_prefix        = var.allow_tf_workspaces && var.gcp_project_id != "" ? "projects/${data.google_project.project[0].number}/locations/global/workloadIdentityPools/${var.wi_pool_id}" : ""
   gcp_workload_identity_iam_principal = "${local.gcp_workload_identity_prefix}/attribute.repository/${var.org_name}/${github_repository.repo.name}"
   gcp_workload_identity_provider      = "${local.gcp_workload_identity_prefix}/providers/github-provider"
