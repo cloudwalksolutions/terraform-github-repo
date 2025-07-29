@@ -64,7 +64,7 @@ module "state_bucket" {
 data "google_project" "project" {
   count = var.allow_tf_workspaces ? 1 : 0
 
-  project_id = local.admin_project_id != "" ? local.admin_project_id : var.gcp_project_id
+  project_id = local.workspace_project_id != "" ? local.workspace_project_id : var.gcp_project_id
 
   depends_on = [
     module.gcp_folder,
@@ -74,7 +74,7 @@ data "google_project" "project" {
 resource "google_service_account" "workspace_service_account" {
   count = var.allow_tf_workspaces ? 1 : 0
 
-  project      = local.admin_project_id
+  project      = local.workspace_project_id
   account_id   = local.sa_name
   display_name = "Workspace admin for ${github_repository.repo.name}"
 

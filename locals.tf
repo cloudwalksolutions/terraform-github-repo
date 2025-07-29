@@ -11,6 +11,8 @@ locals {
   admin_project_label = "${var.state_bucket_prefix}-admin"
   admin_project_id    = "${local.name_prefix}-${local.admin_project_label}-project"
 
+  workspace_project_id = var.workspace_project_id != "" ? var.workspace_project_id : local.admin_project_id
+
   admin_project_apis = [
     "cloudresourcemanager.googleapis.com",
     "iam.googleapis.com",

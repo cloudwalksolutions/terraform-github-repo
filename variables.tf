@@ -230,6 +230,13 @@ variable "gcp_project_id" {
 }
 
 
+variable "workspace_project_id" {
+  description = "GCP project ID for the TF workspace"
+  type        = string
+  default     = ""
+}
+
+
 variable "gcp_parent_folder_id" {
   description = "GCP parent folder ID"
   type        = string
