@@ -38,7 +38,7 @@ locals {
   sa_name      = "${var.name}-ws"
   full_sa_name = var.gcp_sa_prefix != "" ? "${var.gcp_sa_prefix}-${local.sa_name}" : local.sa_name
 
-  sa_email = "${local.full_sa_name}@${local.admin_project_id}.iam.gserviceaccount.com"
+  sa_email = "${local.full_sa_name}@${local.workspace_project_id}.iam.gserviceaccount.com"
 
   workspace_folder_permissions = var.allow_tf_workspaces ? [
     "resourcemanager.folderAdmin",
