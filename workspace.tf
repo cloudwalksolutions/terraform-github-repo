@@ -72,15 +72,11 @@ data "google_project" "project" {
 }
 
 resource "google_service_account" "workspace_service_account" {
-  count = var.allow_tf_workspaces ? 1 : 0
+  count = !var.create_gcp_folder && var.allow_tf_workspaces ? 1 : 0
 
   project      = local.workspace_project_id
   account_id   = local.sa_name
   display_name = "Workspace admin for ${github_repository.repo.name}"
-
-  depends_on = [
-    module.gcp_folder,
-  ]
 }
 
 
