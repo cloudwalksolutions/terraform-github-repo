@@ -15,6 +15,32 @@ module "gcp_folder" {
   sa_prefix                = var.gcp_sa_prefix
   sa_name                  = local.full_sa_name
   sa_project               = var.gcp_project_id
-  extra_folder_permissions = local.combined_sa_permissions
+  extra_folder_permissions = var.gcp_service_account_permissions
+}
+
+module "admin_project_iam" {
+  count = var.allow_tf_workspaces && var.create_gcp_folder ? 1 : 0
+
+  source  = "terraform-google-modules/iam/google//modules/projects_iam"
+  version = "~> 8.1"
+
+  projects = [local.admin_project_id]
+
+  bindings = {
+    "roles/storage.admin" = [
+      "serviceAccount:${local.sa_email}"
+    ]
+    "roles/iam.serviceAccountAdmin" = [
+      "serviceAccount:${local.sa_email}"
+    ]
+    "roles/resourcemanager.projectIamAdmin" = [
+      "serviceAccount:${local.sa_email}"
+    ]
+    "roles/iam.serviceAccountUser" = [
+      "serviceAccount:${local.sa_email}"
+    ]
+  }
+
+  depends_on = [module.gcp_folder]
 }
 
