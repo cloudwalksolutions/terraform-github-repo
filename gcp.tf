@@ -67,7 +67,7 @@ module "workspace_folder_iam" {
 
   bindings = {
     for permission in local.workspace_folder_permissions :
-    "roles/${element(split(".", permission), 1)}" => [
+    "roles/${permission}" => [
       "serviceAccount:${local.sa_email}"
     ]
   }
