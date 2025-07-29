@@ -149,7 +149,7 @@ resource "github_actions_variable" "gcp_workload_identity_pool" {
 
   repository    = github_repository.repo.name
   variable_name = "GCP_WORKLOAD_IDENTITY_POOL"
-  value         = google_iam_workload_identity_pool.github_pool[0].workload_identity_pool_id
+  value         = local.gcp_workload_identity_provider
 }
 
 
