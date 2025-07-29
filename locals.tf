@@ -32,7 +32,7 @@ locals {
   sa_name      = "${var.name}-ws"
   full_sa_name = var.gcp_sa_prefix != "" ? "${var.gcp_sa_prefix}-${local.sa_name}" : local.sa_name
 
-  sa_email = "${local.full_sa_name}@${var.gcp_project_id}.iam.gserviceaccount.com"
+  sa_email = "${local.full_sa_name}@${local.admin_project_id}.iam.gserviceaccount.com"
 }
 
 
