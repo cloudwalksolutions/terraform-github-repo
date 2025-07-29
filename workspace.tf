@@ -13,7 +13,7 @@ module "tfstate_bucket" {
   location   = var.gcp_region
 
   names  = ["${github_repository.repo.name}-tfstate"]
-  prefix = var.state_bucket_prefix_v2
+  prefix = var.state_bucket_prefix
 
   set_admin_roles = true
   versioning = {
@@ -40,7 +40,7 @@ module "state_bucket" {
   location   = var.gcp_region
 
   names  = ["${github_repository.repo.name}-tfstate"]
-  prefix = var.state_bucket_prefix
+  prefix = var.state_bucket_prefix_legacy
 
   set_admin_roles = true
   versioning = {

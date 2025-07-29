@@ -198,21 +198,23 @@ variable "gcp_billing_account_id" {
   default     = ""
 }
 
+
 variable "gcp_region" {
   description = "GCP region"
   type        = string
   default     = "us-central1"
 }
 
-variable "state_bucket_prefix_v2" {
+
+variable "state_bucket_prefix" {
   description = "Prefix for the state bucket"
   type        = string
   default     = "cws"
 }
 
 
-variable "state_bucket_prefix" {
-  description = "Prefix for the state bucket"
+variable "state_bucket_prefix_legacy" {
+  description = "Legacy Prefix for the state bucket"
   type        = string
   default     = "cw"
 }
