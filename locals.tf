@@ -48,7 +48,6 @@ locals {
     "serviceusage.serviceUsageAdmin"
   ] : []
 
-  # Combined permissions from variable and workspace defaults
   combined_sa_permissions = concat(var.gcp_service_account_permissions, local.workspace_folder_permissions)
 }
 

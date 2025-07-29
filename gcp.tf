@@ -25,7 +25,10 @@ module "admin_project_iam" {
   source  = "terraform-google-modules/iam/google//modules/projects_iam"
   version = "~> 8.1"
 
-  projects = [local.admin_project_id]
+  projects = concat(
+    [local.admin_project_id],
+    [for project_id in values(module.gcp_folder[0].projects_map) : project_id]
+  )
 
   bindings = {
     "roles/storage.admin" = [
