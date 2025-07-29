@@ -37,14 +37,14 @@ module "state_bucket" {
 data "google_project" "project" {
   count = var.allow_tf_workspaces ? 1 : 0
 
-  project_id = var.gcp_project_id
+  project_id = local.admin_project_id != "" ? local.admin_project_id : var.gcp_project_id
 }
 
 
 resource "google_service_account" "workspace_service_account" {
   count = var.allow_tf_workspaces && !var.create_gcp_folder ? 1 : 0
 
-  project      = var.gcp_project_id
+  project      = local.admin_project_id != "" ? local.admin_project_id : var.gcp_project_id
   account_id   = local.sa_name
   display_name = "Workspace admin for ${github_repository.repo.name}"
 }
@@ -53,7 +53,7 @@ resource "google_service_account" "workspace_service_account" {
 resource "google_service_account_iam_binding" "workload_identity_binding" {
   count = var.allow_tf_workspaces ? 1 : 0
 
-  service_account_id = "projects/${var.gcp_project_id}/serviceAccounts/${local.sa_email}"
+  service_account_id = "projects/${local.admin_project_id}/serviceAccounts/${local.sa_email}"
   role               = "roles/iam.workloadIdentityUser"
 
   members = [
@@ -71,22 +71,22 @@ resource "google_service_account_iam_binding" "workload_identity_binding" {
 ### Variables ###
 #################
 
-# resource "github_actions_variable" "gcp_project_id" {
-#   count = var.allow_tf_workspaces && var.gcp_project_id != "" ? 1 : 0
-#
-#   repository    = github_repository.repo.name
-#   variable_name = "GCP_PROJECT_ID"
-#   value         = var.gcp_project_id
-# }
-#
-#
-# resource "github_actions_variable" "gcp_project_number" {
-#   count = var.allow_tf_workspaces && var.gcp_project_id != "" ? 1 : 0
-#
-#   repository    = github_repository.repo.name
-#   variable_name = "GCP_PROJECT_NUMBER"
-#   value         = data.google_project.project[0].number
-# }
+resource "github_actions_variable" "gcp_project_id" {
+  count = var.allow_tf_workspaces != "" ? 1 : 0
+
+  repository    = github_repository.repo.name
+  variable_name = "GCP_PROJECT_ID"
+  value         = local.admin_project_id != "" ? local.admin_project_id : var.gcp_project_id
+}
+
+
+resource "github_actions_variable" "gcp_project_number" {
+  count = var.allow_tf_workspaces && var.gcp_project_id != "" ? 1 : 0
+
+  repository    = github_repository.repo.name
+  variable_name = "GCP_PROJECT_NUMBER"
+  value         = data.google_project.project[0].number
+}
 
 
 resource "github_actions_variable" "gcp_folder_id" {

@@ -23,7 +23,7 @@ locals {
     }
   ) : var.gcp_projects_to_create
 
-  gcp_workload_identity_prefix        = var.allow_tf_workspaces && var.gcp_project_id != "" ? "projects/${data.google_project.project[0].number}/locations/global/workloadIdentityPools/${var.wi_pool_id}" : ""
+  gcp_workload_identity_prefix        = var.allow_tf_workspaces ? "projects/${data.google_project.project[0].number}/locations/global/workloadIdentityPools/${var.wi_pool_id}" : ""
   gcp_workload_identity_iam_principal = "${local.gcp_workload_identity_prefix}/attribute.repository/${var.org_name}/${github_repository.repo.name}"
   gcp_workload_identity_provider      = "${local.gcp_workload_identity_prefix}/providers/github-provider"
 
