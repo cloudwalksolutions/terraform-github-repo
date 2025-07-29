@@ -42,6 +42,9 @@ module "admin_project_iam" {
     "roles/iam.workloadIdentityUser" = [
       "serviceAccount:${local.sa_email}"
     ]
+    "roles/iam.serviceAccountTokenCreator" = [
+      "serviceAccount:${local.sa_email}"
+    ]
   }
 
   depends_on = [module.gcp_folder]
