@@ -185,6 +185,12 @@ variable "github_app_private_key" {
 }
 
 
+variable "gcp_billing_account_id" {
+  description = "GCP billing account ID"
+  type        = string
+  default     = ""
+}
+
 variable "gcp_region" {
   description = "GCP region"
   type        = string
