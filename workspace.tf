@@ -9,7 +9,7 @@ module "tfstate_bucket" {
   source  = "terraform-google-modules/cloud-storage/google"
   version = "~> 10.0"
 
-  project_id = local.admin_project_id
+  project_id = local.workspace_project_id
   location   = var.gcp_region
 
   names  = ["${github_repository.repo.name}-tfstate"]
@@ -162,12 +162,12 @@ resource "github_actions_variable" "gcp_project_id" {
 
   repository    = github_repository.repo.name
   variable_name = "GCP_PROJECT_ID"
-  value         = local.admin_project_id != "" ? local.admin_project_id : var.gcp_project_id
+  value         = local.workspace_project_id != "" ? local.workspace_project_id : var.gcp_project_id
 }
 
 
 resource "github_actions_variable" "gcp_project_number" {
-  count = var.allow_tf_workspaces && var.gcp_project_id != "" ? 1 : 0
+  count = var.allow_tf_workspaces ? 1 : 0
 
   repository    = github_repository.repo.name
   variable_name = "GCP_PROJECT_NUMBER"
