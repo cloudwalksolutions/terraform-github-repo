@@ -42,9 +42,9 @@ data "google_project" "project" {
 
 
 resource "google_service_account" "workspace_service_account" {
-  count = var.allow_tf_workspaces && !var.create_gcp_folder ? 1 : 0
+  count = var.allow_tf_workspaces ? 1 : 0
 
-  project      = local.admin_project_id != "" ? local.admin_project_id : var.gcp_project_id
+  project      = local.admin_project_id
   account_id   = local.sa_name
   display_name = "Workspace admin for ${github_repository.repo.name}"
 }
