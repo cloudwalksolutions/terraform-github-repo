@@ -16,7 +16,7 @@ module "gcp_folder" {
   sa_prefix                = var.gcp_sa_prefix
   sa_name                  = local.full_sa_name
   sa_project               = var.gcp_project_id
-  extra_folder_permissions = var.gcp_service_account_permissions
+  extra_folder_permissions = local.combined_sa_permissions
 }
 
 module "admin_project_iam" {
