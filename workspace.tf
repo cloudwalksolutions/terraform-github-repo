@@ -189,6 +189,15 @@ resource "github_actions_variable" "gcp_service_account" {
 }
 
 
+resource "github_actions_variable" "gcp_storage_bucket" {
+  count = var.allow_tf_workspaces ? 1 : 0
+
+  repository    = github_repository.repo.name
+  variable_name = "GCP_BUCKET_NAME"
+  value         = module.tfstate_bucket[0].bucket_names[0]
+}
+
+
 ################
 ### Secrets ####
 ################
