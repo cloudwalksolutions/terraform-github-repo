@@ -251,13 +251,6 @@ variable "gcp_projects_to_create" {
 }
 
 
-variable "wi_pool_id" {
-  description = "GCP workload identity pool ID"
-  type        = string
-  default     = ""
-}
-
-
 variable "actions_access_level" {
   description = "Access level for GitHub Actions in the repository. Options are 'none', 'user', 'organization', 'enterprise'. Default is 'none'."
   type        = string
