@@ -15,37 +15,6 @@ module "gcp_folder" {
   sa_prefix                = var.gcp_sa_prefix
   sa_name                  = local.full_sa_name
   sa_project               = var.gcp_project_id
-  extra_folder_permissions = var.gcp_service_account_permissions
-}
-
-# IAM permissions for service account in admin project
-resource "google_project_iam_member" "admin_project_storage_admin" {
-  count = var.allow_tf_workspaces && var.create_gcp_folder ? 1 : 0
-
-  project = local.admin_project_id
-  role    = "roles/storage.admin"
-  member  = "serviceAccount:${local.sa_email}"
-
-  depends_on = [module.gcp_folder]
-}
-
-resource "google_project_iam_member" "admin_project_iam_admin" {
-  count = var.allow_tf_workspaces && var.create_gcp_folder ? 1 : 0
-
-  project = local.admin_project_id
-  role    = "roles/iam.serviceAccountAdmin"
-  member  = "serviceAccount:${local.sa_email}"
-
-  depends_on = [module.gcp_folder]
-}
-
-resource "google_project_iam_member" "admin_project_project_iam_admin" {
-  count = var.allow_tf_workspaces && var.create_gcp_folder ? 1 : 0
-
-  project = local.admin_project_id
-  role    = "roles/resourcemanager.projectIamAdmin"
-  member  = "serviceAccount:${local.sa_email}"
-
-  depends_on = [module.gcp_folder]
+  extra_folder_permissions = local.combined_sa_permissions
 }
 

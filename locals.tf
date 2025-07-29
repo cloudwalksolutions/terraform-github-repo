@@ -35,6 +35,22 @@ locals {
   full_sa_name = var.gcp_sa_prefix != "" ? "${var.gcp_sa_prefix}-${local.sa_name}" : local.sa_name
 
   sa_email = "${local.full_sa_name}@${local.admin_project_id}.iam.gserviceaccount.com"
+
+  # Additional folder permissions for the admin SA when using TF workspaces
+  workspace_folder_permissions = var.allow_tf_workspaces ? [
+    "resourcemanager.folderAdmin",
+    "resourcemanager.folderCreator", 
+    "resourcemanager.projectCreator",
+    "resourcemanager.projectDeleter",
+    "resourcemanager.projectIamAdmin",
+    "iam.securityAdmin",
+    "iam.serviceAccountAdmin",
+    "iam.serviceAccountUser",
+    "serviceusage.serviceUsageAdmin"
+  ] : []
+
+  # Combined permissions from variable and workspace defaults
+  combined_sa_permissions = concat(var.gcp_service_account_permissions, local.workspace_folder_permissions)
 }
 
 
