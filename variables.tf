@@ -88,6 +88,13 @@ variable "allow_tf_workspaces" {
 }
 
 
+variable "tfstate_buckets" {
+  description = "List of GCP buckets to use for Terraform state"
+  type        = list(string)
+  default     = []
+}
+
+
 variable "auto_apply" {
   description = "Whether to automatically apply changes when a Terraform plan is successful."
   default     = true

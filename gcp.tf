@@ -51,3 +51,16 @@ module "admin_project_iam" {
   depends_on = [module.gcp_folder]
 }
 
+
+resource "google_storage_bucket_iam_member" "tfstate_access" {
+  for_each = toset(var.tfstate_buckets)
+
+  bucket = each.key
+  role   = "roles/storage.objectViewer"
+  member = "serviceAccount:${local.sa_email}"
+
+  depends_on = [
+    google_service_account.workspace_service_account
+  ]
+}
+
