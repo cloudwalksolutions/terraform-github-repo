@@ -194,7 +194,7 @@ resource "github_actions_variable" "gcp_storage_bucket" {
 
   repository    = github_repository.repo.name
   variable_name = "GCP_BUCKET_NAME"
-  value         = module.tfstate_bucket[0].bucket_names[0]
+  value         = module.tfstate_bucket[0].name
 }
 
 
