@@ -49,6 +49,7 @@ locals {
     "iam.securityAdmin",
     "iam.serviceAccountAdmin",
     "iam.serviceAccountUser",
+    "iam.workloadIdentityPoolAdmin",
     "serviceusage.serviceUsageAdmin"
   ] : []
 
