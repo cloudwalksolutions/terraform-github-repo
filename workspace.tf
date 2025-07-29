@@ -144,6 +144,15 @@ resource "google_service_account_iam_binding" "workload_identity_binding" {
 ### Variables ###
 #################
 
+resource "github_actions_variable" "gcp_workload_identity_pool" {
+  count = var.allow_tf_workspaces ? 1 : 0
+
+  repository    = github_repository.repo.name
+  variable_name = "GCP_WORKLOAD_IDENTITY_POOL"
+  value         = google_iam_workload_identity_pool.github_pool[0].workload_identity_pool_id
+}
+
+
 resource "github_actions_variable" "gcp_project_id" {
   count = var.allow_tf_workspaces ? 1 : 0
 
