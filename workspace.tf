@@ -40,6 +40,48 @@ data "google_project" "project" {
   project_id = local.admin_project_id != "" ? local.admin_project_id : var.gcp_project_id
 }
 
+resource "google_iam_workload_identity_pool" "github_pool" {
+  count = var.allow_tf_workspaces ? 1 : 0
+
+  project                   = local.admin_project_id
+  workload_identity_pool_id = local.workload_identity_pool_id
+  display_name              = "GitHub Actions Pool"
+  description               = "Workload Identity Pool for GitHub Actions"
+  disabled                  = false
+
+  depends_on = [
+    module.gcp_folder,
+  ]
+}
+
+resource "google_iam_workload_identity_pool_provider" "github_provider" {
+  count = var.allow_tf_workspaces ? 1 : 0
+
+  project                            = local.admin_project_id
+  workload_identity_pool_id          = google_iam_workload_identity_pool.github_pool[0].workload_identity_pool_id
+  workload_identity_pool_provider_id = "github-provider"
+  display_name                       = "GitHub OIDC Provider"
+  description                        = "OIDC provider for GitHub Actions"
+  disabled                           = false
+
+  attribute_mapping = {
+    "google.subject"             = "assertion.sub"
+    "attribute.actor"            = "assertion.actor"
+    "attribute.repository"       = "assertion.repository"
+    "attribute.repository_owner" = "assertion.repository_owner"
+  }
+
+  attribute_condition = "assertion.repository_owner == '${var.org_name}'"
+
+  oidc {
+    issuer_uri = "https://token.actions.githubusercontent.com"
+  }
+
+  depends_on = [
+    google_iam_workload_identity_pool.github_pool,
+  ]
+}
+
 
 resource "google_service_account" "workspace_service_account" {
   count = var.allow_tf_workspaces ? 1 : 0
@@ -62,7 +104,7 @@ resource "google_service_account_iam_binding" "workload_identity_binding" {
 
   depends_on = [
     google_service_account.workspace_service_account,
-    module.gcp_folder,
+    google_iam_workload_identity_pool_provider.github_provider,
   ]
 }
 
