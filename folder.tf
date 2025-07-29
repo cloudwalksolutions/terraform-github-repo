@@ -18,6 +18,10 @@ module "gcp_folder" {
   sa_name                  = local.full_sa_name
   sa_project               = local.admin_project_id
   extra_folder_permissions = local.combined_sa_permissions
+
+  depends_on = [
+    google_service_account.workspace_service_account,
+  ]
 }
 
 
@@ -52,7 +56,9 @@ module "admin_project_iam" {
     ]
   }
 
-  depends_on = [module.gcp_folder]
+  depends_on = [
+    module.gcp_folder,
+  ]
 }
 
 
@@ -73,7 +79,9 @@ module "workspace_folder_iam" {
     ]
   }
 
-  depends_on = [module.gcp_folder]
+  depends_on = [
+    module.gcp_folder,
+  ]
 }
 
 
