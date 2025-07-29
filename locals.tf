@@ -9,7 +9,7 @@ locals {
   name_prefix = length(local.name_items) > 1 ? join("-", slice(local.name_items, 0, length(local.name_items) - 1)) : var.name
 
   admin_project_prefix = var.admin_project_prefix != "" ? var.admin_project_prefix : var.state_bucket_prefix
-  admin_project_label = "${var.state_bucket_prefix}-admin"
+  admin_project_label = "${local.admin_project_prefix}-admin"
   admin_project_id    = "${local.name_prefix}-${local.admin_project_label}-project"
 
   workspace_project_id = var.workspace_project_id != "" ? var.workspace_project_id : local.admin_project_id
