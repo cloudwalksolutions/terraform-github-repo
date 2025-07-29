@@ -12,9 +12,10 @@ locals {
   admin_project_id    = "${local.name_prefix}-${local.admin_project_label}-project"
 
   admin_project_apis = [
-    "storage.googleapis.com",
-    "iam.googleapis.com",
     "cloudresourcemanager.googleapis.com",
+    "iam.googleapis.com",
+    "serviceusage.googleapis.com",
+    "storage.googleapis.com",
   ]
 
   projects_to_create = var.allow_tf_workspaces ? merge(
