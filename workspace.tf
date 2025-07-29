@@ -77,6 +77,10 @@ resource "google_service_account" "workspace_service_account" {
   project      = local.admin_project_id
   account_id   = local.sa_name
   display_name = "Workspace admin for ${github_repository.repo.name}"
+
+  depends_on = [
+    module.gcp_folder,
+  ]
 }
 
 
