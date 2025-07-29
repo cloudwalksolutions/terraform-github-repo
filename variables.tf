@@ -191,6 +191,12 @@ variable "gcp_region" {
   default     = "us-central1"
 }
 
+variable "state_bucket_prefix_v2" {
+  description = "Prefix for the state bucket"
+  type        = string
+  default     = "cws"
+}
+
 variable "state_bucket_prefix" {
   description = "Prefix for the state bucket"
   type        = string

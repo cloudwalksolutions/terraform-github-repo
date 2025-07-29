@@ -3,6 +3,33 @@
 ### State Bucket #####
 ######################
 
+module "tfstate_bucket" {
+  count = var.allow_tf_workspaces ? 1 : 0
+
+  source  = "terraform-google-modules/cloud-storage/google"
+  version = "~> 10.0"
+
+  project_id = local.admin_project_id
+  location   = var.gcp_region
+
+  names  = ["${github_repository.repo.name}-tfstate"]
+  prefix = var.state_bucket_prefix_v2
+
+  set_admin_roles = true
+  versioning = {
+    first = true
+  }
+  admins = [
+    "serviceAccount:${local.sa_email}",
+  ]
+
+  depends_on = [
+    google_service_account.workspace_service_account,
+    module.gcp_folder,
+  ]
+}
+
+
 module "state_bucket" {
   count = var.allow_tf_workspaces ? 1 : 0
 
