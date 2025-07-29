@@ -19,6 +19,7 @@ module "gcp_folder" {
   extra_folder_permissions = local.combined_sa_permissions
 }
 
+
 module "admin_project_iam" {
   count = var.allow_tf_workspaces && var.create_gcp_folder ? 1 : 0
 
@@ -46,6 +47,27 @@ module "admin_project_iam" {
       "serviceAccount:${local.sa_email}"
     ]
     "roles/iam.serviceAccountTokenCreator" = [
+      "serviceAccount:${local.sa_email}"
+    ]
+  }
+
+  depends_on = [module.gcp_folder]
+}
+
+
+module "workspace_folder_iam" {
+  count = var.create_gcp_folder && var.allow_tf_workspaces ? 1 : 0
+
+  source  = "terraform-google-modules/iam/google//modules/folders_iam"
+  version = "~> 8.1"
+
+  folders = [
+    module.gcp_folder[0].folder_id,
+  ]
+
+  bindings = {
+    for permission in local.workspace_folder_permissions :
+    "roles/${element(split(".", permission), 1)}" => [
       "serviceAccount:${local.sa_email}"
     ]
   }

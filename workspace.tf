@@ -71,6 +71,15 @@ data "google_project" "project" {
   ]
 }
 
+resource "google_service_account" "workspace_service_account" {
+  count = var.allow_tf_workspaces ? 1 : 0
+
+  project      = local.admin_project_id
+  account_id   = local.sa_name
+  display_name = "Workspace admin for ${github_repository.repo.name}"
+}
+
+
 resource "google_iam_workload_identity_pool" "github_pool" {
   count = var.allow_tf_workspaces ? 1 : 0
 
@@ -111,15 +120,6 @@ resource "google_iam_workload_identity_pool_provider" "github_provider" {
   depends_on = [
     google_iam_workload_identity_pool.github_pool,
   ]
-}
-
-
-resource "google_service_account" "workspace_service_account" {
-  count = var.allow_tf_workspaces ? 1 : 0
-
-  project      = local.admin_project_id
-  account_id   = local.sa_name
-  display_name = "Workspace admin for ${github_repository.repo.name}"
 }
 
 
