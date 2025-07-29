@@ -97,7 +97,7 @@ resource "google_iam_workload_identity_pool" "github_pool" {
 resource "google_iam_workload_identity_pool_provider" "github_provider" {
   count = var.allow_tf_workspaces ? 1 : 0
 
-  project                            = local.admin_project_id
+  project                            = local.workspace_project_id
   workload_identity_pool_id          = google_iam_workload_identity_pool.github_pool[0].workload_identity_pool_id
   workload_identity_pool_provider_id = "github-provider"
   display_name                       = "GitHub OIDC Provider"
@@ -126,7 +126,7 @@ resource "google_iam_workload_identity_pool_provider" "github_provider" {
 resource "google_service_account_iam_binding" "workload_identity_binding" {
   count = var.allow_tf_workspaces ? 1 : 0
 
-  service_account_id = "projects/${local.admin_project_id}/serviceAccounts/${local.sa_email}"
+  service_account_id = "projects/${local.workspace_project_id}/serviceAccounts/${local.sa_email}"
   role               = "roles/iam.workloadIdentityUser"
 
   members = [
