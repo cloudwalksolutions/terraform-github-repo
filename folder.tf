@@ -11,7 +11,7 @@ module "gcp_folder" {
 
   org_id = var.gcp_org_id
 
-  create_service_account   = true
+  create_service_account   = !var.allow_tf_workspaces
   sa_is_security_admin     = var.allow_tf_workspaces
   sa_is_billing_user       = var.allow_tf_workspaces
   sa_prefix                = var.gcp_sa_prefix
