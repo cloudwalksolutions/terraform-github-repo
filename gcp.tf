@@ -27,7 +27,7 @@ module "admin_project_iam" {
 
   projects = concat(
     [local.admin_project_id],
-    [for project_id in values(module.gcp_folder[0].projects_map) : project_id]
+    [for project_id, apis in values(module.gcp_folder[0].projects_map) : project_id]
   )
 
   bindings = {
