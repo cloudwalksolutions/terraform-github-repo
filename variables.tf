@@ -210,11 +210,20 @@ variable "state_bucket_prefix_v2" {
   default     = "cws"
 }
 
+
 variable "state_bucket_prefix" {
   description = "Prefix for the state bucket"
   type        = string
   default     = "cw"
 }
+
+
+variable "admin_project_prefix" {
+  description = "Prefix for the admin project"
+  type        = string
+  default     = ""
+}
+
 
 variable "gcp_sa_prefix" {
   description = "GCP service account prefix"
@@ -300,4 +309,3 @@ variable "gcp_service_account_permissions" {
   type        = list(string)
   default     = []
 }
-
