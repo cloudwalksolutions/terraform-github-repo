@@ -2,7 +2,7 @@
 module "gcp_folder" {
   count = var.create_gcp_folder ? 1 : 0
 
-  source = "git::https://github.com/cloudwalksolutions/terraform-google-folder.git?ref=0.0.20"
+  source = "git::https://github.com/cloudwalksolutions/terraform-google-folder.git?ref=0.0.21"
 
   parent_folder_id = var.gcp_parent_folder_id
   folder_name      = var.gcp_folder_name != "" ? var.gcp_folder_name : var.name
@@ -12,7 +12,8 @@ module "gcp_folder" {
   org_id = var.gcp_org_id
 
   create_service_account   = true
-  sa_is_security_admin     = true
+  sa_is_security_admin     = var.allow_tf_workspaces
+  sa_is_billing_admin      = var.allow_tf_workspaces
   sa_prefix                = var.gcp_sa_prefix
   sa_name                  = local.full_sa_name
   sa_project               = var.gcp_project_id
