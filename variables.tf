@@ -223,7 +223,7 @@ variable "state_bucket_prefix_legacy" {
 variable "admin_project_prefix" {
   description = "Prefix for the admin project"
   type        = string
-  default     = ""
+  default     = "cw"
 }
 
 

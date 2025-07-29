@@ -8,8 +8,7 @@ locals {
 
   name_prefix = length(local.name_items) > 1 ? join("-", slice(local.name_items, 0, length(local.name_items) - 1)) : var.name
 
-  admin_project_prefix = var.admin_project_prefix != "" ? var.admin_project_prefix : var.state_bucket_prefix
-  admin_project_label = "${local.admin_project_prefix}-admin"
+  admin_project_label = "${var.admin_project_prefix}-admin"
   admin_project_id    = "${local.name_prefix}-${local.admin_project_label}-project"
 
   workspace_project_id = var.workspace_project_id != "" ? var.workspace_project_id : local.admin_project_id
@@ -32,8 +31,6 @@ locals {
   gcp_workload_identity_prefix        = var.allow_tf_workspaces ? "projects/${data.google_project.project[0].number}/locations/global/workloadIdentityPools/${local.workload_identity_pool_id}" : ""
   gcp_workload_identity_iam_principal = "${local.gcp_workload_identity_prefix}/attribute.repository/${var.org_name}/${github_repository.repo.name}"
   gcp_workload_identity_provider      = "${local.gcp_workload_identity_prefix}/providers/github-provider"
-
-  state_bucket_name = "${var.state_bucket_prefix}-${github_repository.repo.name}-tfstate"
 
   sa_name      = "${var.name}-ws"
   full_sa_name = var.gcp_sa_prefix != "" ? "${var.gcp_sa_prefix}-${local.sa_name}" : local.sa_name
