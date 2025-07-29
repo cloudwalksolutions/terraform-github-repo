@@ -64,7 +64,7 @@ module "state_bucket" {
 data "google_project" "project" {
   count = var.allow_tf_workspaces ? 1 : 0
 
-  project_id = local.workspace_project_id != "" ? local.workspace_project_id : var.gcp_project_id
+  project_id = local.workspace_project_id
 
   depends_on = [
     module.gcp_folder,
@@ -81,9 +81,9 @@ resource "google_service_account" "workspace_service_account" {
 
 
 resource "google_iam_workload_identity_pool" "github_pool" {
-  count = var.allow_tf_workspaces ? 1 : 0
+  count = var.allow_tf_workspaces && var.create_workload_identity_pool ? 1 : 0
 
-  project                   = local.admin_project_id
+  project                   = local.workspace_project_id
   workload_identity_pool_id = local.workload_identity_pool_id
   display_name              = "GitHub Actions Pool"
   description               = "Workload Identity Pool for GitHub Actions"
@@ -95,7 +95,7 @@ resource "google_iam_workload_identity_pool" "github_pool" {
 }
 
 resource "google_iam_workload_identity_pool_provider" "github_provider" {
-  count = var.allow_tf_workspaces ? 1 : 0
+  count = var.allow_tf_workspaces && var.create_workload_identity_pool_provider ? 1 : 0
 
   project                            = local.workspace_project_id
   workload_identity_pool_id          = google_iam_workload_identity_pool.github_pool[0].workload_identity_pool_id
@@ -158,7 +158,7 @@ resource "github_actions_variable" "gcp_project_id" {
 
   repository    = github_repository.repo.name
   variable_name = "GCP_PROJECT_ID"
-  value         = local.workspace_project_id != "" ? local.workspace_project_id : var.gcp_project_id
+  value         = local.workspace_project_id
 }
 
 

@@ -309,3 +309,26 @@ variable "gcp_service_account_permissions" {
   type        = list(string)
   default     = []
 }
+
+
+variable "workload_identity_pool_id" {
+  description = "Workload Identity Pool ID for GitHub Actions"
+  type        = string
+  default     = ""
+}
+
+
+variable "create_workload_identity_pool" {
+  description = "Whether to create a Workload Identity Pool for GitHub Actions"
+  type        = bool
+  default     = true
+}
+
+
+variable "create_workload_identity_pool_provider" {
+  description = "Whether to create a Workload Identity Pool Provider for GitHub Actions"
+  type        = bool
+  default     = true
+}
+
+
