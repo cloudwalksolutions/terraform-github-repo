@@ -38,6 +38,10 @@ data "google_project" "project" {
   count = var.allow_tf_workspaces ? 1 : 0
 
   project_id = local.admin_project_id != "" ? local.admin_project_id : var.gcp_project_id
+
+  depends_on = [
+    module.gcp_folder,
+  ]
 }
 
 resource "google_iam_workload_identity_pool" "github_pool" {
