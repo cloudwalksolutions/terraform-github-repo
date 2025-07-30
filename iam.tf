@@ -11,7 +11,7 @@ data "google_project" "project" {
 
 
 resource "google_iam_workload_identity_pool" "github_pool" {
-count = var.allow_tf_workspaces && var.create_workload_identity_pool ? 1 : 0
+  count = var.allow_tf_workspaces && var.create_workload_identity_pool ? 1 : 0
 
   project                   = local.workspace_project_id
   workload_identity_pool_id = local.workload_identity_pool_id
@@ -24,8 +24,9 @@ count = var.allow_tf_workspaces && var.create_workload_identity_pool ? 1 : 0
   ]
 }
 
+
 resource "google_iam_workload_identity_pool_provider" "github_provider" {
-count = var.allow_tf_workspaces && var.create_workload_identity_pool_provider ? 1 : 0
+  count = var.allow_tf_workspaces && var.create_workload_identity_pool_provider ? 1 : 0
 
   project                            = local.workspace_project_id
   workload_identity_pool_id          = google_iam_workload_identity_pool.github_pool[0].workload_identity_pool_id
@@ -54,10 +55,10 @@ count = var.allow_tf_workspaces && var.create_workload_identity_pool_provider ? 
 
 
 resource "google_service_account" "workspace_service_accounts" {
-  for_each = var.allow_tf_workspaces ? toset(local.workspace_lifecycles) : toset([])
+  for_each = var.allow_tf_workspaces ? toset(local.workspace_sa_lifecycles) : toset([])
 
   project      = local.workspace_project_id
-  account_id   = length(local.lifecycles) > 1 ? "${each.key}-${local.sa_name}" : local.sa_name
+  account_id   = length(local.workspace_sa_lifecycles) > 1 ? "${each.key}-${local.sa_name}" : local.sa_name
   display_name = "${each.key} workspace admin for ${github_repository.repo.name}"
 }
 
