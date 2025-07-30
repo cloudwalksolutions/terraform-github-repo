@@ -60,8 +60,8 @@ variable "source_branch" {
 }
 
 
-variable "new_branches" {
-  description = "List of new branches"
+variable "extra_lifecycles" {
+  description = "List of extra lifecycles to apply to the repo"
   type        = list(string)
   default     = []
 }
@@ -331,6 +331,29 @@ variable "create_workload_identity_pool_provider" {
   description = "Whether to create a Workload Identity Pool Provider for GitHub Actions"
   type        = bool
   default     = true
+}
+
+
+variable "gcp_app_project_apis" {
+  type        = list(string)
+  description = "Map of GCP project APIs to be enabled for the individual app projects"
+  default = [
+    "artifactregistry.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "cloudfunctions.googleapis.com",
+    "compute.googleapis.com",
+    "container.googleapis.com",
+    "dns.googleapis.com",
+    "iam.googleapis.com",
+    "logging.googleapis.com",
+    "monitoring.googleapis.com",
+    "pubsub.googleapis.com",
+    "storage.googleapis.com",
+    "servicenetworking.googleapis.com",
+    "secretmanager.googleapis.com",
+    "sqladmin.googleapis.com",
+    "run.googleapis.com",
+  ]
 }
 
 

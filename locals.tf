@@ -2,7 +2,8 @@
 locals {
   template = var.template_repo != "" ? toset([var.template_repo]) : toset([])
 
-  all_branches = concat(var.new_branches, [var.source_branch])
+  all_branches = concat(var.extra_lifecycles, [var.source_branch])
+  lifecycles = concat(["prod"], var.extra_lifecycles)
 
   name_items = split("-", var.name)
 
@@ -20,12 +21,20 @@ locals {
     "storage.googleapis.com",
   ]
 
-  projects_to_create = var.allow_tf_workspaces ? merge(
+  workspace_projects_to_create = var.allow_tf_workspaces ? {
+    (local.admin_project_label) = local.admin_project_apis
+  } : var.gcp_projects_to_create
+
+  application_projects_to_create = {
+    for extra_lifecycle in local.lifecycles :
+    "${extra_lifecycle}-app" => var.gcp_app_project_apis
+  }
+
+  gcp_projects_to_create = merge(
     var.gcp_projects_to_create,
-    {
-      (local.admin_project_label) = local.admin_project_apis
-    }
-  ) : var.gcp_projects_to_create
+    local.workspace_projects_to_create,
+    local.application_projects_to_create,
+  )
 
   workload_identity_pool_id           = var.workload_identity_pool_id != "" ? var.workload_identity_pool_id : "${local.name_prefix}-${local.admin_project_label}-pool"
   gcp_workload_identity_prefix        = var.allow_tf_workspaces ? "projects/${data.google_project.project[0].number}/locations/global/workloadIdentityPools/${local.workload_identity_pool_id}" : ""

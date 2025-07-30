@@ -66,7 +66,7 @@ resource "github_repository_dependabot_security_updates" "dependabot" {
 
 
 resource "github_branch" "branches" {
-  for_each = toset(setsubtract(var.new_branches, [var.source_branch, "main", "prod"]))
+  for_each = toset(setsubtract(var.extra_lifecycles, [var.source_branch, "main", "prod"]))
 
   repository    = github_repository.repo.name
   branch        = each.key == "prod" ? var.source_branch : each.key
