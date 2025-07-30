@@ -73,7 +73,7 @@ resource "google_service_account_iam_binding" "workload_identity_binding" {
   ]
 
   depends_on = [
-    google_service_account.workspace_service_account,
+    google_service_account.workspace_service_accounts,
     google_iam_workload_identity_pool_provider.github_provider,
   ]
 }

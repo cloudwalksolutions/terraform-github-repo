@@ -6,7 +6,7 @@ module "gcp_folder" {
 
   parent_folder_id = var.gcp_parent_folder_id
   folder_name      = var.gcp_folder_name != "" ? var.gcp_folder_name : var.name
-  projects_dict    = local.projects_to_create
+  projects_dict    = local.gcp_projects_to_create
   billing_account  = var.gcp_billing_account_id
 
   org_id = var.gcp_org_id
@@ -89,7 +89,7 @@ resource "google_storage_bucket_iam_member" "tfstate_access" {
   member = "serviceAccount:${local.sa_email}"
 
   depends_on = [
-    google_service_account.workspace_service_account
+    google_service_account.workspace_service_accounts
   ]
 }
 

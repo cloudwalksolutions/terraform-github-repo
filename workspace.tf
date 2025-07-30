@@ -24,7 +24,7 @@ module "tfstate_bucket" {
   ]
 
   depends_on = [
-    google_service_account.workspace_service_account,
+    google_service_account.workspace_service_accounts,
     module.gcp_folder,
   ]
 }
