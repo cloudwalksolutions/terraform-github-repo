@@ -14,8 +14,7 @@ module "gcp_folder" {
   create_service_account   = true
   sa_is_security_admin     = var.allow_tf_workspaces
   sa_is_billing_user       = var.allow_tf_workspaces
-  sa_prefix                = var.gcp_sa_prefix
-  sa_name                  = local.full_sa_name
+  sa_name                  = length(local.lifecycles) > 1 ? "prod-${local.full_sa_name}" : local.full_sa_name
   sa_project               = local.workspace_project_id
   extra_folder_permissions = local.combined_sa_permissions
 }
