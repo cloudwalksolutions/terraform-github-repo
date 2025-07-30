@@ -15,6 +15,7 @@ locals {
   workspace_project_id = var.workspace_project_id != "" ? var.workspace_project_id : local.admin_project_id
 
   admin_project_apis = [
+    "cloudbilling.googleapis.com",
     "cloudresourcemanager.googleapis.com",
     "iam.googleapis.com",
     "serviceusage.googleapis.com",
