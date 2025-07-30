@@ -41,7 +41,7 @@ count = var.allow_tf_workspaces && var.create_workload_identity_pool_provider ? 
     "attribute.repository_owner" = "assertion.repository_owner"
   }
 
-  attribute_condition = "assertion.repository_owner == '${var.org_name}' && assertion.repository == '${github_repository.repo.name}'"
+  attribute_condition = "assertion.repository_owner == '${var.org_name}'"
 
   oidc {
     issuer_uri = "https://token.actions.githubusercontent.com"
