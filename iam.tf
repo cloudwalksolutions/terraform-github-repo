@@ -11,7 +11,7 @@ data "google_project" "project" {
 
 
 resource "google_service_account" "workspace_service_accounts" {
-  for_each = var.allow_tf_workspaces && !var.create_gcp_folder ? toset(local.lifecycles) : toset([])
+  for_each = var.allow_tf_workspaces ? toset(local.workspace_lifecycles) : toset([])
 
   project      = local.workspace_project_id
   account_id   = length(local.lifecycles) > 1 ? "${each.key}-${local.sa_name}" : local.sa_name

@@ -36,6 +36,8 @@ locals {
     local.application_projects_to_create,
   )
 
+  workspace_lifecycles = !var.create_gcp_folder ? local.lifecycles : toset([])
+
   workload_identity_pool_id           = var.workload_identity_pool_id != "" ? var.workload_identity_pool_id : "${local.name_prefix}-${local.admin_project_label}-pool"
   gcp_workload_identity_prefix        = var.allow_tf_workspaces ? "projects/${data.google_project.project[0].number}/locations/global/workloadIdentityPools/${local.workload_identity_pool_id}" : ""
   gcp_workload_identity_iam_principal = "${local.gcp_workload_identity_prefix}/attribute.repository/${var.org_name}/${github_repository.repo.name}"
