@@ -65,7 +65,7 @@ resource "google_service_account" "workspace_service_accounts" {
 resource "google_service_account_iam_binding" "workload_identity_binding" {
   for_each = var.allow_tf_workspaces ? toset(local.workspace_lifecycles) : toset([])
 
-  service_account_id = "projects/${local.workspace_project_id}/serviceAccounts/${google_service_account.workspace_service_accounts[each.key].email}"
+  service_account_id = length(local.lifecycles) > 1 ? "projects/${local.workspace_project_id}/serviceAccounts/${each.key}-${local.sa_email}" : "projects/${local.workspace_project_id}/serviceAccounts/${local.sa_email}"
   role               = "roles/iam.workloadIdentityUser"
 
   members = [
