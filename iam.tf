@@ -16,7 +16,7 @@ count = var.allow_tf_workspaces && var.create_workload_identity_pool ? 1 : 0
   project                   = local.workspace_project_id
   workload_identity_pool_id = local.workload_identity_pool_id
   display_name              = "GitHub Actions Pool - ${github_repository.repo.name}"
-  description               = "Workload Identity Pool for GitHub Actions - ${github_repository.repo.name}"
+  description               = "Workload Identity Pool - ${github_repository.repo.name}"
   disabled                  = false
 
   depends_on = [
