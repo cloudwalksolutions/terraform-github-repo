@@ -25,10 +25,10 @@ locals {
     (local.admin_project_label) = local.admin_project_apis
   } : var.gcp_projects_to_create
 
-  application_projects_to_create = {
+  application_projects_to_create = length(local.lifecycles) > 1 ? {
     for extra_lifecycle in local.lifecycles :
     "${extra_lifecycle}-app" => var.gcp_app_project_apis
-  }
+  } : {}
 
   gcp_projects_to_create = merge(
     var.gcp_projects_to_create,
