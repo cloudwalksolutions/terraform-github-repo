@@ -22,9 +22,10 @@ resource "github_repository" "repo" {
   }
 
   dynamic "pages" {
-    for_each = var.enable_github_pages && var.repo_visibility == "public" ? var.github_pages : toset([])
+    for_each = var.enable_github_pages ? var.github_pages : toset([])
 
     content {
+      build_type = pages.value.build_type
       source {
         branch = pages.value.branch
         path   = pages.value.path

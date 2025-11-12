@@ -293,8 +293,10 @@ variable "enable_github_pages" {
 variable "github_pages" {
   description = "Map of GitHub Pages branches to their source directories"
   type = list(object({
-    branch = string
-    path   = string
+    build_type = optional(string, "legacy")
+    branch = optional(string, "main")
+    path   = optional(string, "/")
+    cname  = optional(string, "")
   }))
   default = []
 }

@@ -59,7 +59,8 @@ resource "google_service_account" "workspace_service_accounts" {
 
   project      = local.workspace_project_id
   account_id   = length(local.workspace_sa_lifecycles) > 1 ? "${each.key}-${local.sa_name}" : local.sa_name
-  display_name = "${each.key} workspace admin for ${github_repository.repo.name}"
+  display_name = "Terraform-managed service account"
+  description  = "${each.key} folder admin service account"
 }
 
 
