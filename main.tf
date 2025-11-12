@@ -25,6 +25,7 @@ resource "github_repository" "repo" {
     for_each = var.enable_github_pages ? var.github_pages : toset([])
 
     content {
+      cname      = pages.value.cname
       build_type = pages.value.build_type
       source {
         branch = pages.value.branch

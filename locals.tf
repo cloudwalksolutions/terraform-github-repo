@@ -3,7 +3,7 @@ locals {
   template = var.template_repo != "" ? toset([var.template_repo]) : toset([])
 
   all_branches = concat(var.extra_lifecycles, [var.source_branch])
-  lifecycles = concat(["prod"], var.extra_lifecycles)
+  lifecycles   = concat(["prod"], var.extra_lifecycles)
 
   name_items = split("-", var.name)
 
