@@ -48,6 +48,7 @@ locals {
   full_sa_name = var.gcp_sa_prefix != "" ? "${var.gcp_sa_prefix}-${local.sa_name}" : local.sa_name
 
   sa_email = "${local.full_sa_name}@${local.workspace_project_id}.iam.gserviceaccount.com"
+  sa_emails = length(local.lifecycles) > 1 ? {for l in local.lifecycles : l => "${l}-${local.sa_email}"} : {local.lifecycles[0]: local.sa_email}
 
   workspace_folder_permissions = var.allow_tf_workspaces ? [
     "resourcemanager.folderAdmin",

@@ -4,7 +4,7 @@
 ######################
 
 module "tfstate_bucket" {
-  count = var.allow_tf_workspaces ? 1 : 0
+  for_each = var.allow_tf_workspaces ? local.sa_emails : {}
 
   source  = "terraform-google-modules/cloud-storage/google"
   version = "~> 10.0"
@@ -13,14 +13,14 @@ module "tfstate_bucket" {
   location   = var.gcp_region
 
   names  = ["${github_repository.repo.name}-tfstate"]
-  prefix = var.state_bucket_prefix
+  prefix = length(local.sa_emails) > 1 ? "${each.key}-${var.state_bucket_prefix}": var.state_bucket_prefix
 
   set_admin_roles = true
   versioning = {
     first = true
   }
   admins = [
-    "serviceAccount:${local.sa_email}",
+    "serviceAccount:${each.key}",
   ]
 
   depends_on = [
@@ -70,11 +70,11 @@ resource "github_actions_variable" "gcp_folder_id" {
 
 
 resource "github_actions_variable" "gcp_service_account" {
-  for_each = var.allow_tf_workspaces ? toset(local.lifecycles) : toset([])
+  for_each = var.allow_tf_workspaces ? local.sa_emails : {}
 
   repository    = github_repository.repo.name
-  variable_name = length(local.lifecycles) > 1 ? "${upper(each.key)}_GCP_SERVICE_ACCOUNT" : "GCP_SERVICE_ACCOUNT"
-  value         = length(local.lifecycles) > 1 ? "${each.key}-${local.sa_email}" : local.sa_email
+  variable_name = length(local.sa_emails) > 1 ? "${upper(each.key)}_GCP_SERVICE_ACCOUNT" : "GCP_SERVICE_ACCOUNT"
+  value         = each.value
 }
 
 
