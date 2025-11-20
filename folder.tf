@@ -58,7 +58,7 @@ module "admin_project_iam" {
 
 
 module "workspace_folder_iam" {
-  count = var.create_gcp_folder && var.allow_tf_workspaces ? 1 : 0
+  for_each = var.create_gcp_folder && var.allow_tf_workspaces ? local.sa_emails : {}
 
   source  = "terraform-google-modules/iam/google//modules/folders_iam"
   version = "~> 8.1"
@@ -70,7 +70,7 @@ module "workspace_folder_iam" {
   bindings = {
     for permission in local.workspace_folder_permissions :
     "roles/${permission}" => [
-      "serviceAccount:${local.sa_email}"
+      "serviceAccount:${each.value}"
     ]
   }
 

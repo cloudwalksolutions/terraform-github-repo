@@ -20,7 +20,7 @@ module "tfstate_bucket" {
     first = true
   }
   admins = [
-    "serviceAccount:${each.key}",
+    "serviceAccount:${each.value}",
   ]
 
   depends_on = [
