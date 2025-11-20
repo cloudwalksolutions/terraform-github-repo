@@ -21,7 +21,7 @@ module "gcp_folder" {
 
 
 module "admin_project_iam" {
-  count = var.allow_tf_workspaces && var.create_gcp_folder ? 1 : 0
+  for_each = var.allow_tf_workspaces && var.create_gcp_folder ? local.sa_emails : {}
 
   source  = "terraform-google-modules/iam/google//modules/projects_iam"
   version = "~> 8.1"
@@ -32,22 +32,22 @@ module "admin_project_iam" {
 
   bindings = {
     "roles/storage.admin" = [
-      "serviceAccount:${local.sa_email}"
+      "serviceAccount:${each.value}"
     ]
     "roles/iam.serviceAccountAdmin" = [
-      "serviceAccount:${local.sa_email}"
+      "serviceAccount:${each.value}"
     ]
     "roles/resourcemanager.projectIamAdmin" = [
-      "serviceAccount:${local.sa_email}"
+      "serviceAccount:${each.value}"
     ]
     "roles/iam.serviceAccountUser" = [
-      "serviceAccount:${local.sa_email}"
+      "serviceAccount:${each.value}"
     ]
     "roles/iam.workloadIdentityUser" = [
-      "serviceAccount:${local.sa_email}"
+      "serviceAccount:${each.value}"
     ]
     "roles/iam.serviceAccountTokenCreator" = [
-      "serviceAccount:${local.sa_email}"
+      "serviceAccount:${each.value}"
     ]
   }
 
