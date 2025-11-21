@@ -76,6 +76,7 @@ module "workspace_folder_iam" {
 
   depends_on = [
     module.gcp_folder,
+    google_service_account.workspace_service_accounts,
   ]
 }
 
