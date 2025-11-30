@@ -52,7 +52,7 @@ resource "github_repository_collaborators" "repo_collaborators" {
   repository = github_repository.repo.name
 
   dynamic "team" {
-    for_each = var.teams ? var.teams : []
+    for_each = length(var.teams) > 0 ? var.teams : []
     content {
       team_id    = team.value.id
       permission = team.value.permission != "" ? team.value.permission : var.default_permission
@@ -60,7 +60,7 @@ resource "github_repository_collaborators" "repo_collaborators" {
   }
 
   dynamic "user" {
-    for_each = var.collaborators ? var.collaborators : []
+    for_each = length(var.collaborators) > 0 ? var.collaborators : []
     content {
       username        = user.value.username
       permission      = user.value.permission != "" ? user.value.permission : var.default_permission
