@@ -55,7 +55,7 @@ resource "github_repository_collaborators" "repo_collaborators" {
     for_each = var.teams
     content {
       team_id    = template.key
-      permission = template.value
+      permission = template.value ? template.value : var.default_permission
     }
   }
 
@@ -63,7 +63,7 @@ resource "github_repository_collaborators" "repo_collaborators" {
     for_each = var.collaborators
     content {
       username        = template.key
-      permission      = template.value
+      permission      = template.value ? template.value : var.default_permission
     }
   }
 

@@ -32,13 +32,6 @@ variable "template_repo" {
 }
 
 
-variable "permission" {
-  description = "Github default member permissions"
-  type        = string
-  default     = "pull"
-}
-
-
 variable "description" {
   description = "Github repo description"
   type        = string
@@ -295,17 +288,30 @@ variable "github_pages" {
 }
 
 
+variable "default_permission" {
+  description = "Github default member permissions"
+  type        = string
+  default     = "pull"
+}
+
+
 variable "teams" {
-  description = "Map of repository teams to their permission"
-  type        = map(string)
-  default     = {}
+  description = "List of repository teams and their permission level"
+  type        = list(object({
+    id         = string
+    permission = optional(string, "")
+  }))
+  default     = []
 }
 
 
 variable "collaborators" {
-  description = "Map of repository collaborators to their permission"
-  type        = map(string)
-  default     = {}
+  description = "List of repository collaborators and their permission level"
+  type        = list(object({
+    username   = string
+    permission = optional(string, "")
+  }))
+  default     = []
 }
 
 
