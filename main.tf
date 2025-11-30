@@ -55,7 +55,7 @@ resource "github_repository_collaborators" "repo_collaborators" {
     for_each = var.teams
     content {
       team_id    = team.value.id
-      permission = team.value.permission ? team.value.permission : var.default_permission
+      permission = team.value.permission != "" ? team.value.permission : var.default_permission
     }
   }
 
@@ -63,7 +63,7 @@ resource "github_repository_collaborators" "repo_collaborators" {
     for_each = var.collaborators
     content {
       username        = user.value.username
-      permission      = user.value.permission ? user.value.permission : var.default_permission
+      permission      = user.value.permission != "" ? user.value.permission : var.default_permission
     }
   }
 
