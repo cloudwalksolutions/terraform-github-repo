@@ -54,16 +54,16 @@ resource "github_repository_collaborators" "repo_collaborators" {
   dynamic "team" {
     for_each = var.teams
     content {
-      team_id    = team.key
-      permission = team.value ? team.value : var.default_permission
+      team_id    = team.value.id
+      permission = team.value.permission ? team.value.permission : var.default_permission
     }
   }
 
   dynamic "user" {
     for_each = var.collaborators
     content {
-      username        = user.key
-      permission      = user.value ? user.value : var.default_permission
+      username        = user.value.username
+      permission      = user.value.permission ? user.value.permission : var.default_permission
     }
   }
 
