@@ -39,13 +39,6 @@ variable "permission" {
 }
 
 
-variable "team_id" {
-  description = "Github team ID"
-  type        = string
-  default     = ""
-}
-
-
 variable "description" {
   description = "Github repo description"
   type        = string
@@ -300,6 +293,21 @@ variable "github_pages" {
   }))
   default = []
 }
+
+
+variable "teams" {
+  description = "Map of repository teams to their permission"
+  type        = map(string)
+  default     = {}
+}
+
+
+variable "collaborators" {
+  description = "Map of repository collaborators to their permission"
+  type        = map(string)
+  default     = {}
+}
+
 
 variable "gcp_org_id" {
   description = "GCP organization ID"

@@ -48,16 +48,25 @@ resource "github_actions_repository_access_level" "actions_access" {
 }
 
 
-resource "github_team_repository" "team_repo" {
-  count = var.team_id != "" ? 1 : 0
-
-  team_id    = var.team_id
+resource "github_repository_collaborators" "repo_collaborators" {
   repository = github_repository.repo.name
-  permission = var.permission
 
-  depends_on = [
-    github_repository.repo,
-  ]
+  dynamic "team" {
+    for_each = var.teams
+    content {
+      team_id    = template.key
+      permission = template.value
+    }
+  }
+
+  dynamic "user" {
+    for_each = var.collaborators
+    content {
+      username        = template.key
+      permission      = template.value
+    }
+  }
+
 }
 
 
