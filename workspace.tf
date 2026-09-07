@@ -12,12 +12,12 @@ module "tfstate_bucket" {
   project_id = local.workspace_project_id
   location   = var.gcp_region
 
-  names  = ["${github_repository.repo.name}-tfstate"]
-  prefix = length(local.sa_emails) > 1 ? "${each.key}-${var.state_bucket_prefix}": var.state_bucket_prefix
+  names  = [local.tfstate_bucket_name]
+  prefix = length(local.sa_emails) > 1 ? "${each.key}-${var.state_bucket_prefix}" : var.state_bucket_prefix
 
   set_admin_roles = true
   versioning = {
-    first = true
+    (local.tfstate_bucket_name) = true
   }
   admins = [
     "serviceAccount:${each.value}",
