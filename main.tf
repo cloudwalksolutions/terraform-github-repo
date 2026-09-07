@@ -62,8 +62,8 @@ resource "github_repository_collaborators" "repo_collaborators" {
   dynamic "user" {
     for_each = var.collaborators != null ? var.collaborators : []
     content {
-      username        = user.value.username
-      permission      = user.value.permission != "" ? user.value.permission : var.default_permission
+      username   = user.value.username
+      permission = user.value.permission != "" ? user.value.permission : var.default_permission
     }
   }
 

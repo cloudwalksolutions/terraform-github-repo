@@ -297,21 +297,21 @@ variable "default_permission" {
 
 variable "teams" {
   description = "List of repository teams and their permission level"
-  type        = list(object({
+  type = list(object({
     id         = string
     permission = optional(string, "")
   }))
-  default     = []
+  default = []
 }
 
 
 variable "collaborators" {
   description = "List of repository collaborators and their permission level"
-  type        = list(object({
+  type = list(object({
     username   = string
     permission = optional(string, "")
   }))
-  default     = []
+  default = []
 }
 
 
