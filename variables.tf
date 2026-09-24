@@ -32,20 +32,6 @@ variable "template_repo" {
 }
 
 
-variable "permission" {
-  description = "Github default member permissions"
-  type        = string
-  default     = "pull"
-}
-
-
-variable "team_id" {
-  description = "Github team ID"
-  type        = string
-  default     = ""
-}
-
-
 variable "description" {
   description = "Github repo description"
   type        = string
@@ -269,6 +255,20 @@ variable "gcp_folder_name" {
 }
 
 
+variable "gcp_use_random_id" {
+  description = "Whether a project id carries a random suffix. A project id GCP has already issued can never be reused, so a folder whose projects were deleted cannot be rebuilt under the same names"
+  type        = bool
+  default     = false
+}
+
+
+variable "gcp_project_deletion_policy" {
+  description = "What becomes of a project this module stops managing. ABANDON leaves it running and only drops it from state"
+  type        = string
+  default     = "DELETE"
+}
+
+
 variable "gcp_projects_to_create" {
   description = "Map of GCP projects to create to list of APIs to enable"
   type        = map(list(string))
@@ -300,6 +300,34 @@ variable "github_pages" {
   }))
   default = []
 }
+
+
+variable "default_permission" {
+  description = "Github default member permissions"
+  type        = string
+  default     = "pull"
+}
+
+
+variable "teams" {
+  description = "List of repository teams and their permission level"
+  type = list(object({
+    id         = string
+    permission = optional(string, "")
+  }))
+  default = []
+}
+
+
+variable "collaborators" {
+  description = "List of repository collaborators and their permission level"
+  type = list(object({
+    username   = string
+    permission = optional(string, "")
+  }))
+  default = []
+}
+
 
 variable "gcp_org_id" {
   description = "GCP organization ID"

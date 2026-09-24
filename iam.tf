@@ -61,6 +61,10 @@ resource "google_service_account" "workspace_service_accounts" {
   account_id   = length(local.workspace_sa_lifecycles) > 1 ? "${each.key}-${local.sa_name}" : local.sa_name
   display_name = "Terraform-managed service account"
   description  = "${each.key} folder admin service account"
+
+  depends_on = [
+    module.gcp_folder,
+  ]
 }
 
 

@@ -2,12 +2,14 @@
 module "gcp_folder" {
   count = var.create_gcp_folder ? 1 : 0
 
-  source = "git::https://github.com/cloudwalksolutions/terraform-google-folder.git?ref=0.0.25"
+  source = "git::https://github.com/cloudwalksolutions/terraform-google-folder.git?ref=0.0.27"
 
   parent_folder_id = var.gcp_parent_folder_id
   folder_name      = var.gcp_folder_name != "" ? var.gcp_folder_name : var.name
   projects_dict    = local.gcp_projects_to_create
   billing_account  = var.gcp_billing_account_id
+  use_random_id    = var.gcp_use_random_id
+  deletion_policy  = var.gcp_project_deletion_policy
 
   org_id = var.gcp_org_id
 
@@ -21,7 +23,7 @@ module "gcp_folder" {
 
 
 module "admin_project_iam" {
-  count = var.allow_tf_workspaces && var.create_gcp_folder ? 1 : 0
+  for_each = var.allow_tf_workspaces && var.create_gcp_folder ? local.sa_emails : {}
 
   source  = "terraform-google-modules/iam/google//modules/projects_iam"
   version = "~> 8.1"
@@ -32,22 +34,22 @@ module "admin_project_iam" {
 
   bindings = {
     "roles/storage.admin" = [
-      "serviceAccount:${local.sa_email}"
+      "serviceAccount:${each.value}"
     ]
     "roles/iam.serviceAccountAdmin" = [
-      "serviceAccount:${local.sa_email}"
+      "serviceAccount:${each.value}"
     ]
     "roles/resourcemanager.projectIamAdmin" = [
-      "serviceAccount:${local.sa_email}"
+      "serviceAccount:${each.value}"
     ]
     "roles/iam.serviceAccountUser" = [
-      "serviceAccount:${local.sa_email}"
+      "serviceAccount:${each.value}"
     ]
     "roles/iam.workloadIdentityUser" = [
-      "serviceAccount:${local.sa_email}"
+      "serviceAccount:${each.value}"
     ]
     "roles/iam.serviceAccountTokenCreator" = [
-      "serviceAccount:${local.sa_email}"
+      "serviceAccount:${each.value}"
     ]
   }
 
@@ -58,7 +60,7 @@ module "admin_project_iam" {
 
 
 module "workspace_folder_iam" {
-  count = var.create_gcp_folder && var.allow_tf_workspaces ? 1 : 0
+  for_each = var.create_gcp_folder && var.allow_tf_workspaces ? local.sa_emails : {}
 
   source  = "terraform-google-modules/iam/google//modules/folders_iam"
   version = "~> 8.1"
@@ -70,12 +72,13 @@ module "workspace_folder_iam" {
   bindings = {
     for permission in local.workspace_folder_permissions :
     "roles/${permission}" => [
-      "serviceAccount:${local.sa_email}"
+      "serviceAccount:${each.value}"
     ]
   }
 
   depends_on = [
     module.gcp_folder,
+    google_service_account.workspace_service_accounts,
   ]
 }
 

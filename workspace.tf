@@ -12,15 +12,15 @@ module "tfstate_bucket" {
   project_id = local.workspace_project_id
   location   = var.gcp_region
 
-  names  = ["${github_repository.repo.name}-tfstate"]
-  prefix = length(local.sa_emails) > 1 ? "${each.key}-${var.state_bucket_prefix}": var.state_bucket_prefix
+  names  = [local.tfstate_bucket_name]
+  prefix = length(local.sa_emails) > 1 ? "${each.key}-${var.state_bucket_prefix}" : var.state_bucket_prefix
 
   set_admin_roles = true
   versioning = {
-    first = true
+    (local.tfstate_bucket_name) = true
   }
   admins = [
-    "serviceAccount:${each.key}",
+    "serviceAccount:${each.value}",
   ]
 
   depends_on = [
@@ -79,11 +79,11 @@ resource "github_actions_variable" "gcp_service_account" {
 
 
 resource "github_actions_variable" "gcp_storage_bucket" {
-  count = var.allow_tf_workspaces ? 1 : 0
+  for_each = var.allow_tf_workspaces ? toset(local.lifecycles) : toset([])
 
   repository    = github_repository.repo.name
-  variable_name = "GCP_BUCKET_NAME"
-  value         = module.tfstate_bucket[0].name
+  variable_name = length(local.lifecycles) > 1 ? "${each.key}_GCP_BUCKET_NAME" : "GCP_BUCKET_NAME"
+  value         = module.tfstate_bucket[each.key].name
 }
 
 
