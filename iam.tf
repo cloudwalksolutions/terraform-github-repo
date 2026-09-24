@@ -59,14 +59,19 @@ resource "google_service_account" "workspace_service_accounts" {
 
   project      = local.workspace_project_id
   account_id   = length(local.workspace_sa_lifecycles) > 1 ? "${each.key}-${local.sa_name}" : local.sa_name
-  display_name = "${each.key} workspace admin for ${github_repository.repo.name}"
+  display_name = "Terraform-managed service account"
+  description  = "${each.key} folder admin service account"
+
+  depends_on = [
+    module.gcp_folder,
+  ]
 }
 
 
 resource "google_service_account_iam_binding" "workload_identity_binding" {
-  for_each = var.allow_tf_workspaces ? toset(local.lifecycles) : toset([])
+  for_each = var.allow_tf_workspaces ? local.sa_emails : {}
 
-  service_account_id = length(local.lifecycles) > 1 ? "projects/${local.workspace_project_id}/serviceAccounts/${each.key}-${local.sa_email}" : "projects/${local.workspace_project_id}/serviceAccounts/${local.sa_email}"
+  service_account_id = "projects/${local.workspace_project_id}/serviceAccounts/${each.value}"
   role               = "roles/iam.workloadIdentityUser"
 
   members = [

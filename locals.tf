@@ -3,7 +3,7 @@ locals {
   template = var.template_repo != "" ? toset([var.template_repo]) : toset([])
 
   all_branches = concat(var.extra_lifecycles, [var.source_branch])
-  lifecycles = concat(["prod"], var.extra_lifecycles)
+  lifecycles   = concat(["prod"], var.extra_lifecycles)
 
   name_items = split("-", var.name)
 
@@ -44,10 +44,15 @@ locals {
   gcp_workload_identity_iam_principal = "${local.gcp_workload_identity_prefix}/attribute.repository/${var.org_name}/${github_repository.repo.name}"
   gcp_workload_identity_provider      = "${local.gcp_workload_identity_prefix}/providers/github-provider"
 
+  # The cloud-storage module keys its per-bucket maps on the lowercase unprefixed name, so this
+  # has to match the entry in `names` exactly or those settings silently fall back to defaults.
+  tfstate_bucket_name = lower("${github_repository.repo.name}-tfstate")
+
   sa_name      = "${var.name}-ws"
   full_sa_name = var.gcp_sa_prefix != "" ? "${var.gcp_sa_prefix}-${local.sa_name}" : local.sa_name
 
-  sa_email = "${local.full_sa_name}@${local.workspace_project_id}.iam.gserviceaccount.com"
+  sa_email  = "${local.full_sa_name}@${local.workspace_project_id}.iam.gserviceaccount.com"
+  sa_emails = length(local.lifecycles) > 1 ? { for l in local.lifecycles : l => "${l}-${local.sa_email}" } : { "${local.lifecycles[0]}" : local.sa_email }
 
   workspace_folder_permissions = var.allow_tf_workspaces ? [
     "resourcemanager.folderAdmin",
