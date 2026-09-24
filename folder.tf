@@ -2,12 +2,14 @@
 module "gcp_folder" {
   count = var.create_gcp_folder ? 1 : 0
 
-  source = "git::https://github.com/cloudwalksolutions/terraform-google-folder.git?ref=0.0.26"
+  source = "git::https://github.com/cloudwalksolutions/terraform-google-folder.git?ref=0.0.27"
 
   parent_folder_id = var.gcp_parent_folder_id
   folder_name      = var.gcp_folder_name != "" ? var.gcp_folder_name : var.name
   projects_dict    = local.gcp_projects_to_create
   billing_account  = var.gcp_billing_account_id
+  use_random_id    = var.gcp_use_random_id
+  deletion_policy  = var.gcp_project_deletion_policy
 
   org_id = var.gcp_org_id
 
