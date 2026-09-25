@@ -41,7 +41,7 @@ module "admin_project_iam" {
   version = "~> 8.1"
 
   projects = [
-    local.admin_project_id,
+    local.workspace_project_id,
   ]
 
   bindings = {
