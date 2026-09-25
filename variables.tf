@@ -130,7 +130,7 @@ variable "allow_update_branch" {
 
 
 variable "required_status_checks" {
-  description = "List of required status checks"
+  description = "Status checks that must pass on the source branch, with PR branches up to date (strict); empty requires none"
   type        = list(string)
   default     = []
 }
