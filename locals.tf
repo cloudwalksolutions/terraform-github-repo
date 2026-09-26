@@ -12,7 +12,11 @@ locals {
   admin_project_label = "${var.admin_project_prefix}-admin"
   admin_project_id    = "${local.name_prefix}-${local.admin_project_label}-project"
 
-  workspace_project_id = var.workspace_project_id != "" ? var.workspace_project_id : local.admin_project_id
+  # The folder reports the id it actually created. admin_project_id only guesses the name, and is
+  # wrong whenever use_random_id appends a suffix.
+  workspace_project_id = var.workspace_project_id != "" ? var.workspace_project_id : (
+    var.create_gcp_folder && var.allow_tf_workspaces ? module.gcp_folder[0].sa_project_id : local.admin_project_id
+  )
 
   admin_project_apis = [
     "cloudbilling.googleapis.com",

@@ -3,6 +3,19 @@
 ### State Bucket #####
 ######################
 
+# Keyed by count until a workspace could hold several lifecycles. Without these a consumer
+# advancing past 0.0.102 plans a destroy and recreate of the bucket its own state lives in.
+moved {
+  from = module.tfstate_bucket[0]
+  to   = module.tfstate_bucket["prod"]
+}
+
+moved {
+  from = github_actions_variable.gcp_storage_bucket[0]
+  to   = github_actions_variable.gcp_storage_bucket["prod"]
+}
+
+
 module "tfstate_bucket" {
   for_each = var.allow_tf_workspaces ? local.sa_emails : {}
 

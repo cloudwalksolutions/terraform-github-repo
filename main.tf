@@ -109,10 +109,13 @@ resource "github_branch_protection_v3" "branch_protections" {
   enforce_admins                  = each.key == var.source_branch ? var.enforce_admins : false
   require_conversation_resolution = var.require_conversation_resolution
 
-  # required_status_checks {
-  #   strict   = false
-  #   contexts = ["ci/travis"]
-  # }
+  dynamic "required_status_checks" {
+    for_each = each.key == var.source_branch && length(var.required_status_checks) > 0 ? [var.required_status_checks] : []
+    content {
+      strict   = true
+      contexts = required_status_checks.value
+    }
+  }
 
   required_pull_request_reviews {
     dismiss_stale_reviews      = true
