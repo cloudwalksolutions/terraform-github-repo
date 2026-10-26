@@ -96,11 +96,14 @@ module "workspace_folder_iam" {
 
 
 resource "google_storage_bucket_iam_member" "tfstate_access" {
-  for_each = length(local.sa_emails) == 1 ? toset(var.tfstate_buckets) : toset([])
+  for_each = length(local.sa_emails) == 1 ? { for bucket in var.tfstate_buckets : bucket => { bucket = bucket, sa = local.sa_email } } : {
+    for pair in setproduct(keys(local.sa_emails), var.tfstate_buckets) :
+    "${pair[0]}/${pair[1]}" => { bucket = pair[1], sa = local.sa_emails[pair[0]] }
+  }
 
-  bucket = each.key
+  bucket = each.value.bucket
   role   = "roles/storage.objectViewer"
-  member = "serviceAccount:${local.sa_email}"
+  member = "serviceAccount:${each.value.sa}"
 
   depends_on = [
     google_service_account.workspace_service_accounts
