@@ -83,7 +83,7 @@ module "workspace_folder_iam" {
 
   bindings = {
     for permission in concat(local.workspace_folder_permissions, var.workspace_folder_roles) :
-    "roles/${permission}" => [
+    startswith(permission, "organizations/") ? permission : "roles/${permission}" => [
       "serviceAccount:${each.value}"
     ]
   }
