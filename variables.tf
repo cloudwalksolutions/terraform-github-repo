@@ -343,7 +343,7 @@ variable "gcp_service_account_permissions" {
 }
 
 variable "workspace_folder_roles" {
-  description = "Further roles each workspace holds on the repo's folder, without the 'roles/' prefix"
+  description = "Further roles each workspace holds on the repo's folder: predefined ones without the 'roles/' prefix, custom ones by their full organizations/<id>/roles/<role> name"
   type        = list(string)
   default     = []
 }
