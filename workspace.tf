@@ -100,6 +100,24 @@ resource "github_actions_variable" "gcp_storage_bucket" {
 }
 
 
+resource "github_actions_variable" "gcp_app_project_id" {
+  for_each = var.allow_tf_workspaces && var.create_gcp_folder ? toset(keys(local.application_projects_to_create)) : toset([])
+
+  repository    = github_repository.repo.name
+  variable_name = "${trimsuffix(each.key, "-app")}_GCP_APP_PROJECT_ID"
+  value         = module.gcp_folder[0].projects_map[each.key].project_id
+}
+
+
+resource "github_actions_variable" "extra" {
+  for_each = var.actions_variables
+
+  repository    = github_repository.repo.name
+  variable_name = each.key
+  value         = each.value
+}
+
+
 ################
 ### Secrets ####
 ################
