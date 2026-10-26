@@ -109,15 +109,6 @@ resource "github_actions_variable" "gcp_app_project_id" {
 }
 
 
-resource "github_actions_variable" "extra" {
-  for_each = var.actions_variables
-
-  repository    = github_repository.repo.name
-  variable_name = each.key
-  value         = each.value
-}
-
-
 ################
 ### Secrets ####
 ################

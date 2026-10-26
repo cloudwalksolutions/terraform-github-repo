@@ -73,12 +73,6 @@ variable "allow_tf_workspaces" {
   default     = false
 }
 
-variable "actions_variables" {
-  description = "Further GitHub Actions variables to set on the repo, by name"
-  type        = map(string)
-  default     = {}
-}
-
 
 variable "tfstate_buckets" {
   description = "List of GCP buckets to use for Terraform state"
