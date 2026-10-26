@@ -342,6 +342,12 @@ variable "gcp_service_account_permissions" {
   default     = []
 }
 
+variable "workspace_folder_roles" {
+  description = "Further roles each workspace holds on the repo's folder, without the 'roles/' prefix"
+  type        = list(string)
+  default     = []
+}
+
 
 variable "workload_identity_pool_id" {
   description = "Workload Identity Pool ID for GitHub Actions"

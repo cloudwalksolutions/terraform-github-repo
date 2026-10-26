@@ -82,7 +82,7 @@ module "workspace_folder_iam" {
   ]
 
   bindings = {
-    for permission in local.workspace_folder_permissions :
+    for permission in concat(local.workspace_folder_permissions, var.workspace_folder_roles) :
     "roles/${permission}" => [
       "serviceAccount:${each.value}"
     ]
