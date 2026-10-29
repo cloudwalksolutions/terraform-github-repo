@@ -150,6 +150,25 @@ variable "enforce_admins" {
 }
 
 
+variable "protection_mode" {
+  description = "How protected branches are protected: classic branch protection or a repository ruleset"
+  type        = string
+  default     = "classic"
+
+  validation {
+    condition     = contains(["classic", "ruleset"], var.protection_mode)
+    error_message = "protection_mode must be classic or ruleset"
+  }
+}
+
+
+variable "bypass_deploy_keys" {
+  description = "Whether deploy keys with write access may push past the ruleset"
+  type        = bool
+  default     = false
+}
+
+
 variable "is_github_admin" {
   description = "Whether to use Github admin credentials"
   type        = bool
