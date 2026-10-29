@@ -159,6 +159,15 @@ resource "github_repository_ruleset" "branch_protections" {
     }
   }
 
+  dynamic "bypass_actors" {
+    for_each = each.key == var.source_branch && var.enforce_admins ? [] : [5]
+    content {
+      actor_type  = "RepositoryRole"
+      actor_id    = bypass_actors.value
+      bypass_mode = "always"
+    }
+  }
+
   rules {
     deletion         = true
     non_fast_forward = true

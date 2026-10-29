@@ -39,6 +39,14 @@ run "lets_deploy_keys_past_a_ruleset_with_the_same_review_rules" {
   }
 
   assert {
+    condition = anytrue([
+      for actor in github_repository_ruleset.branch_protections["main"].bypass_actors :
+      actor.actor_type == "RepositoryRole" && actor.actor_id == 5 && actor.bypass_mode == "always"
+    ])
+    error_message = "repo admins should still push and merge past review, as classic protection lets them"
+  }
+
+  assert {
     condition = (
       github_repository_ruleset.branch_protections["main"].rules[0].pull_request[0].required_approving_review_count == 1 &&
       github_repository_ruleset.branch_protections["main"].rules[0].pull_request[0].require_code_owner_review &&
