@@ -87,20 +87,6 @@ variable "auto_apply" {
 }
 
 
-variable "dismissal_restrictions" {
-  description = "List of people who can dismiss restrictions on pull requests"
-  type        = list(string)
-  default     = []
-}
-
-
-variable "push_restrictions" {
-  description = "List of people who can dismiss push restrictions"
-  type        = list(string)
-  default     = []
-}
-
-
 variable "vulnerability_alerts" {
   description = "Whether repo should enable vulnerability alerts"
   type        = bool
@@ -147,18 +133,6 @@ variable "enforce_admins" {
   description = "Whether to enforce branch protection for admins"
   type        = bool
   default     = false
-}
-
-
-variable "protection_mode" {
-  description = "How protected branches are protected: classic branch protection or a repository ruleset"
-  type        = string
-  default     = "classic"
-
-  validation {
-    condition     = contains(["classic", "ruleset"], var.protection_mode)
-    error_message = "protection_mode must be classic or ruleset"
-  }
 }
 
 

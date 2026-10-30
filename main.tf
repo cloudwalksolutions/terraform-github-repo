@@ -100,44 +100,8 @@ resource "github_branch_default" "default" {
 }
 
 
-resource "github_branch_protection_v3" "branch_protections" {
-  for_each = var.protect_branches && var.protection_mode == "classic" ? local.all_branches : toset([])
-
-  repository = github_repository.repo.name
-
-  branch                          = each.key == "prod" ? "main" : each.key
-  enforce_admins                  = each.key == var.source_branch ? var.enforce_admins : false
-  require_conversation_resolution = var.require_conversation_resolution
-
-  dynamic "required_status_checks" {
-    for_each = each.key == var.source_branch && length(var.required_status_checks) > 0 ? [var.required_status_checks] : []
-    content {
-      strict   = true
-      contexts = required_status_checks.value
-    }
-  }
-
-  required_pull_request_reviews {
-    dismiss_stale_reviews      = true
-    require_code_owner_reviews = true
-    dismissal_users            = var.dismissal_restrictions
-    dismissal_teams            = []
-  }
-
-  restrictions {
-    users = var.push_restrictions
-    teams = []
-    apps  = []
-  }
-
-  depends_on = [
-    github_branch.branches,
-  ]
-}
-
-
 resource "github_repository_ruleset" "branch_protections" {
-  for_each = var.protect_branches && var.protection_mode == "ruleset" ? local.all_branches : toset([])
+  for_each = var.protect_branches ? local.all_branches : toset([])
 
   repository  = github_repository.repo.name
   name        = each.key == "prod" ? "main" : each.key
