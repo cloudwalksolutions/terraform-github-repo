@@ -6,45 +6,8 @@ variables {
   org_name = "acme"
 }
 
-run "protects_with_classic_branch_protection_by_default" {
+run "protects_main_with_a_ruleset_requiring_a_code_owner_review" {
   command = plan
-
-  assert {
-    condition     = length(github_branch_protection_v3.branch_protections) == 1
-    error_message = "main should keep classic protection"
-  }
-
-  assert {
-    condition     = length(github_repository_ruleset.branch_protections) == 0
-    error_message = "no ruleset unless asked for"
-  }
-}
-
-run "lets_deploy_keys_past_a_ruleset_with_the_same_review_rules" {
-  command = plan
-
-  variables {
-    protection_mode    = "ruleset"
-    bypass_deploy_keys = true
-  }
-
-  assert {
-    condition     = length(github_branch_protection_v3.branch_protections) == 0
-    error_message = "classic protection would still block deploy keys"
-  }
-
-  assert {
-    condition     = github_repository_ruleset.branch_protections["main"].bypass_actors[0].actor_type == "DeployKey"
-    error_message = "deploy keys should bypass the ruleset"
-  }
-
-  assert {
-    condition = anytrue([
-      for actor in github_repository_ruleset.branch_protections["main"].bypass_actors :
-      actor.actor_type == "RepositoryRole" && actor.actor_id == 5 && actor.bypass_mode == "always"
-    ])
-    error_message = "repo admins should still push and merge past review, as classic protection lets them"
-  }
 
   assert {
     condition = (
@@ -55,6 +18,38 @@ run "lets_deploy_keys_past_a_ruleset_with_the_same_review_rules" {
       github_repository_ruleset.branch_protections["main"].rules[0].non_fast_forward &&
       github_repository_ruleset.branch_protections["main"].rules[0].deletion
     )
-    error_message = "the ruleset should keep classic protection's rules"
+    error_message = "main should need a code owner's review and refuse force pushes and deletion"
+  }
+
+  assert {
+    condition = anytrue([
+      for actor in github_repository_ruleset.branch_protections["main"].bypass_actors :
+      actor.actor_type == "RepositoryRole" && actor.actor_id == 5 && actor.bypass_mode == "always"
+    ])
+    error_message = "repo admins should still push and merge past review"
+  }
+
+  assert {
+    condition = alltrue([
+      for actor in github_repository_ruleset.branch_protections["main"].bypass_actors :
+      actor.actor_type != "DeployKey"
+    ])
+    error_message = "deploy keys should push past review only when asked"
+  }
+}
+
+run "lets_deploy_keys_push_when_asked" {
+  command = plan
+
+  variables {
+    bypass_deploy_keys = true
+  }
+
+  assert {
+    condition = anytrue([
+      for actor in github_repository_ruleset.branch_protections["main"].bypass_actors :
+      actor.actor_type == "DeployKey" && actor.bypass_mode == "always"
+    ])
+    error_message = "deploy keys should bypass the ruleset"
   }
 }
