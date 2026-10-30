@@ -101,7 +101,7 @@ resource "github_branch_default" "default" {
 
 
 resource "github_branch_protection_v3" "branch_protections" {
-  for_each = var.protect_branches ? local.all_branches : toset([])
+  for_each = var.protect_branches && var.protection_mode == "classic" ? local.all_branches : toset([])
 
   repository = github_repository.repo.name
 
@@ -128,6 +128,69 @@ resource "github_branch_protection_v3" "branch_protections" {
     users = var.push_restrictions
     teams = []
     apps  = []
+  }
+
+  depends_on = [
+    github_branch.branches,
+  ]
+}
+
+
+resource "github_repository_ruleset" "branch_protections" {
+  for_each = var.protect_branches && var.protection_mode == "ruleset" ? local.all_branches : toset([])
+
+  repository  = github_repository.repo.name
+  name        = each.key == "prod" ? "main" : each.key
+  target      = "branch"
+  enforcement = "active"
+
+  conditions {
+    ref_name {
+      include = ["refs/heads/${each.key == "prod" ? "main" : each.key}"]
+      exclude = []
+    }
+  }
+
+  dynamic "bypass_actors" {
+    for_each = var.bypass_deploy_keys ? ["DeployKey"] : []
+    content {
+      actor_type  = bypass_actors.value
+      bypass_mode = "always"
+    }
+  }
+
+  dynamic "bypass_actors" {
+    for_each = each.key == var.source_branch && var.enforce_admins ? [] : [5]
+    content {
+      actor_type  = "RepositoryRole"
+      actor_id    = bypass_actors.value
+      bypass_mode = "always"
+    }
+  }
+
+  rules {
+    deletion         = true
+    non_fast_forward = true
+
+    pull_request {
+      required_approving_review_count   = 1
+      require_code_owner_review         = true
+      dismiss_stale_reviews_on_push     = true
+      required_review_thread_resolution = var.require_conversation_resolution
+    }
+
+    dynamic "required_status_checks" {
+      for_each = each.key == var.source_branch && length(var.required_status_checks) > 0 ? [var.required_status_checks] : []
+      content {
+        strict_required_status_checks_policy = true
+        dynamic "required_check" {
+          for_each = required_status_checks.value
+          content {
+            context = required_check.value
+          }
+        }
+      }
+    }
   }
 
   depends_on = [
